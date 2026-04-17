@@ -1,0 +1,129 @@
+@use 'variables' as *;
+
+// ============================================
+// RESPONSIVE
+// ============================================
+
+@mixin sm { @media (min-width: $bp-sm) { @content; } }
+@mixin md { @media (min-width: $bp-md) { @content; } }
+@mixin lg { @media (min-width: $bp-lg) { @content; } }
+@mixin xl { @media (min-width: $bp-xl) { @content; } }
+@mixin xxl { @media (min-width: $bp-2xl) { @content; } }
+
+@mixin mobile { @media (max-width: #{$bp-md - 1px}) { @content; } }
+
+// ============================================
+// FLEXBOX
+// ============================================
+
+@mixin flex($direction: row, $align: center, $justify: flex-start, $gap: 0) {
+  display: flex;
+  flex-direction: $direction;
+  align-items: $align;
+  justify-content: $justify;
+  @if $gap != 0 { gap: $gap; }
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// ============================================
+// GLASS CARD
+// ============================================
+
+@mixin glass-card($blur: 12px, $opacity: 0.06) {
+  background: rgba(255, 255, 255, $opacity);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 1px solid $border-subtle;
+}
+
+@mixin card-base {
+  background: $bg-surface;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-lg;
+  transition: border-color $transition-base, box-shadow $transition-base;
+
+  &:hover {
+    border-color: $border-default;
+  }
+}
+
+// ============================================
+// GLOW EFFECTS
+// ============================================
+
+@mixin glow-blue($intensity: 0.25) {
+  box-shadow: 0 0 20px rgba(37, 99, 235, $intensity);
+}
+
+@mixin glow-text-blue {
+  background: linear-gradient(135deg, $blue-hover, $text-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// ============================================
+// FOCUS STATE
+// ============================================
+
+@mixin focus-ring {
+  outline: none;
+  box-shadow: 0 0 0 3px $blue-glow;
+  border-color: $blue-primary;
+}
+
+// ============================================
+// TRUNCATE TEXT
+// ============================================
+
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ============================================
+// SCROLLBAR
+// ============================================
+
+@mixin custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: $bg-surface;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $border-default;
+    border-radius: $radius-full;
+    &:hover { background: $blue-primary; }
+  }
+}
+
+// ============================================
+// SKELETON SHIMMER
+// ============================================
+
+@mixin skeleton {
+  background: linear-gradient(
+                  90deg,
+                  $bg-elevated 25%,
+                  $border-subtle 50%,
+                  $bg-elevated 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: $radius-md;
+}

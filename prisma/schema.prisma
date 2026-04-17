@@ -1,0 +1,339 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum Role {
+  admin
+  user
+}
+
+enum Recurrency {
+  weekly
+  monthly
+  yearly
+}
+
+// ============================================
+// INVITE CODE
+// ============================================
+
+model InviteCode {
+  id        String    @id @default(cuid())
+  code      String    @unique
+  createdBy String
+  usedBy    String?
+  usedAt    DateTime?
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  creator User  @relation("CreatedInvites", fields: [createdBy], references: [id])
+  user    User? @relation("UsedInvites", fields: [usedBy], references: [id])
+
+  @@index([createdBy])
+  @@index([usedBy])
+}
+
+// ============================================
+// USER
+// ============================================
+
+model User {
+  id        String   @id @default(cuid())
+  firstname String
+  lastname  String
+  email     String   @unique
+  password  String
+  role      Role     @default(user)
+  currency  String   @default("EUR")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  createdInvites  InviteCode[]   @relation("CreatedInvites")
+  usedInvite      InviteCode[]   @relation("UsedInvites")
+  spendings       Spending[]
+  subscriptions   Subscription[]
+  installments    Installment[]
+  categories      Category[]
+  subcategories   Subcategory[]
+  banks           Bank[]
+  tags            Tag[]
+  stores          Store[]
+}
+
+// ============================================
+// BANK (moyen de paiement)
+// ============================================
+
+model Bank {
+  id        String   @id @default(cuid())
+  label     String
+  logo      String?
+  color     String?
+  userId    String?  // null = global
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user          User?          @relation(fields: [userId], references: [id])
+  spendingLines SpendingLine[]
+  subscriptions Subscription[]
+  installments  Installment[]
+
+  @@index([userId])
+}
+
+// ============================================
+// CATEGORY
+// ============================================
+
+model Category {
+  id            String        @id @default(cuid())
+  label         String
+  icon          String?
+  color         String?
+  createdBy     String?       // null = système
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  user          User?         @relation(fields: [createdBy], references: [id])
+  subcategories Subcategory[]
+
+  @@index([createdBy])
+}
+
+// ============================================
+// SUBCATEGORY
+// ============================================
+
+model Subcategory {
+  id        String   @id @default(cuid())
+  label     String
+  icon      String?
+  color     String?
+  categoryId String
+  createdBy  String? // null = système
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  category      Category       @relation(fields: [categoryId], references: [id])
+  user          User?          @relation(fields: [createdBy], references: [id])
+  spendings     Spending[]
+  subscriptions Subscription[]
+  installments  Installment[]
+
+  @@index([categoryId])
+  @@index([createdBy])
+}
+
+// ============================================
+// STORE
+// ============================================
+
+model Store {
+  id        String   @id @default(cuid())
+  label     String
+  logo      String?
+  website   String?
+  userId    String?  // null = global (système)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user          User?          @relation(fields: [userId], references: [id])
+  spendings     Spending[]
+  subscriptions Subscription[]
+  installments  Installment[]
+
+  @@index([userId])
+}
+
+// ============================================
+// TAG
+// ============================================
+
+model Tag {
+  id        String   @id @default(cuid())
+  label     String
+  color     String
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user          User              @relation(fields: [userId], references: [id])
+  spendings     SpendingTag[]
+  subscriptions SubscriptionTag[]
+  installments  InstallmentTag[]
+
+  @@index([userId])
+}
+
+// ============================================
+// SPENDING (dépense ponctuelle)
+// ============================================
+
+model Spending {
+  id            String    @id @default(cuid())
+  userId        String
+  label         String
+  subcategoryId String
+  storeId       String?
+  currency      String    @default("EUR")
+  spendingDate  DateTime
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user        User          @relation(fields: [userId], references: [id])
+  subcategory Subcategory   @relation(fields: [subcategoryId], references: [id])
+  store       Store?        @relation(fields: [storeId], references: [id])
+  lines       SpendingLine[]
+  tags        SpendingTag[]
+
+  @@index([userId])
+  @@index([subcategoryId])
+  @@index([storeId])
+}
+
+model SpendingLine {
+  id           String   @id @default(cuid())
+  spendingId   String
+  label        String?
+  amountGross  Decimal  @db.Decimal(10, 2)
+  discount     Decimal  @default(0) @db.Decimal(10, 2)
+  amountNet    Decimal  @db.Decimal(10, 2)
+  bankId       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  spending Spending @relation(fields: [spendingId], references: [id], onDelete: Cascade)
+  bank     Bank     @relation(fields: [bankId], references: [id])
+
+  @@index([spendingId])
+  @@index([bankId])
+}
+
+model SpendingTag {
+  spendingId String
+  tagId      String
+
+  spending Spending @relation(fields: [spendingId], references: [id], onDelete: Cascade)
+  tag      Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([spendingId, tagId])
+  @@index([tagId])
+}
+
+// ============================================
+// INSTALLMENT (paiement en plusieurs fois)
+// ============================================
+
+model Installment {
+  id                  String   @id @default(cuid())
+  userId              String
+  label               String
+  subcategoryId       String
+  storeId             String?
+  bankId              String
+  currency            String   @default("EUR")
+  totalAmount         Decimal  @db.Decimal(10, 2)
+  occurrences         Int
+  amountPerOccurrence Decimal  @db.Decimal(10, 2)
+  startAt             DateTime
+  endAt               DateTime
+  notes               String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  user        User             @relation(fields: [userId], references: [id])
+  subcategory Subcategory      @relation(fields: [subcategoryId], references: [id])
+  store       Store?           @relation(fields: [storeId], references: [id])
+  bank        Bank             @relation(fields: [bankId], references: [id])
+  lines       InstallmentLine[]
+  tags        InstallmentTag[]
+
+  @@index([userId])
+  @@index([subcategoryId])
+  @@index([storeId])
+  @@index([bankId])
+}
+
+model InstallmentLine {
+  id            String    @id @default(cuid())
+  installmentId String
+  dueDate       DateTime
+  amount        Decimal   @db.Decimal(10, 2)
+  isPaid        Boolean   @default(false)
+  paidAt        DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  installment Installment @relation(fields: [installmentId], references: [id], onDelete: Cascade)
+
+  @@index([installmentId])
+}
+
+model InstallmentTag {
+  installmentId String
+  tagId         String
+
+  installment Installment @relation(fields: [installmentId], references: [id], onDelete: Cascade)
+  tag         Tag         @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([installmentId, tagId])
+  @@index([tagId])
+}
+
+// ============================================
+// SUBSCRIPTION (abonnement)
+// ============================================
+
+model Subscription {
+  id            String      @id @default(cuid())
+  userId        String
+  label         String
+  subcategoryId String
+  storeId       String?
+  bankId        String
+  amount        Decimal     @db.Decimal(10, 2)
+  currency      String      @default("EUR")
+  recurrency    Recurrency  @default(monthly)
+  startAt       DateTime
+  endAt         DateTime?   // null = sans fin
+  nextBillingAt DateTime
+  isActive      Boolean     @default(true)
+  notes         String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  user        User              @relation(fields: [userId], references: [id])
+  subcategory Subcategory       @relation(fields: [subcategoryId], references: [id])
+  store       Store?            @relation(fields: [storeId], references: [id])
+  bank        Bank              @relation(fields: [bankId], references: [id])
+  tags        SubscriptionTag[]
+
+  @@index([userId])
+  @@index([subcategoryId])
+  @@index([storeId])
+  @@index([bankId])
+}
+
+model SubscriptionTag {
+  subscriptionId String
+  tagId          String
+
+  subscription Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  tag          Tag          @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([subscriptionId, tagId])
+  @@index([tagId])
+}
