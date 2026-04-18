@@ -17,8 +17,9 @@ export async function POST(req: Request) {
     const parsed = registerSchema.safeParse(body);
 
     if (!parsed.success) {
+      const firstError = parsed.error.issues[0]?.message || "Données invalides";
       return NextResponse.json(
-        { error: parsed.error.errors[0].message },
+        { error: firstError },
         { status: 400 }
       );
     }
