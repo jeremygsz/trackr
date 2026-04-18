@@ -7,6 +7,7 @@ import styles from './Button.module.scss';
 type ButtonBaseProps = Omit<HTMLMotionProps<'button'>, 'ref'>;
 
 interface ButtonProps extends ButtonBaseProps {
+  children?: React.ReactNode;
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
   isLoading?: boolean;
   fullWidth?: boolean;
