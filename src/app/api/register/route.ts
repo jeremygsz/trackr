@@ -56,7 +56,7 @@ export async function POST(req: Request) {
       );
     }
 
-    if (code.expiresAt && code.expiresAt < new Error()) {
+    if (code.expiresAt && code.expiresAt < new Date()) {
        return NextResponse.json(
         { error: "Ce code d'invitation a expiré" },
         { status: 400 }
@@ -101,3 +101,4 @@ export async function POST(req: Request) {
     );
   }
 }
+
