@@ -1,0 +1,35 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $space-8;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.error {
+  font-size: $font-size-sm;
+  color: $color-danger;
+  background: $color-danger-soft;
+  padding: $space-3;
+  border-radius: $radius-md;
+  text-align: center;
+  border: 1px solid rgba($color-danger, 0.2);
+  animation: fadeIn 0.3s ease;
+}
+
+.footer {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  text-align: center;
+  
+  a {
+    font-weight: $font-weight-semibold;
+  }
+}

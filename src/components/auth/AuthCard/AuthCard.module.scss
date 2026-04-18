@@ -1,0 +1,41 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.card {
+  width: 100%;
+  max-width: 440px;
+  padding: $space-10;
+  @include glass-card(16px, 0.04);
+  border-radius: $radius-xl;
+  @include glow-blue(0.1);
+  
+  @include mobile {
+    padding: $space-6;
+    border-radius: $radius-lg;
+    backdrop-filter: blur(10px);
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: $space-8;
+}
+
+.title {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  letter-spacing: $letter-spacing-tight;
+  margin-bottom: $space-2;
+  @include glow-text-blue;
+}
+
+.subtitle {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+}

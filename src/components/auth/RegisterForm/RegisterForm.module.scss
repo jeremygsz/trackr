@@ -1,0 +1,41 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-4;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.error {
+  font-size: $font-size-sm;
+  color: $color-danger;
+  background: $color-danger-soft;
+  padding: $space-3;
+  border-radius: $radius-md;
+  text-align: center;
+  border: 1px solid rgba($color-danger, 0.2);
+  margin: $space-2 0;
+  animation: fadeIn 0.3s ease;
+}
+
+.footer {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  text-align: center;
+  margin-top: $space-4;
+  
+  a {
+    font-weight: $font-weight-semibold;
+  }
+}

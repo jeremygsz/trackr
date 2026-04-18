@@ -1,0 +1,41 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.main {
+  min-height: 100vh;
+  @include flex-center;
+  position: relative;
+  overflow: hidden;
+  padding: $space-6;
+  background-color: $bg-deep;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  pointer-events: none;
+
+  .circle1 {
+    position: absolute;
+    top: -10%;
+    right: -5%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba($blue-primary, 0.08) 0%, transparent 70%);
+    border-radius: $radius-full;
+  }
+
+  .circle2 {
+    position: absolute;
+    bottom: -10%;
+    left: -5%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba($blue-soft, 0.05) 0%, transparent 70%);
+    border-radius: $radius-full;
+  }
+}
