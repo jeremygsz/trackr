@@ -1,10 +1,12 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, HTMLMotionProps } from 'framer-motion';
 import styles from './Button.module.scss';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+type ButtonBaseProps = Omit<HTMLMotionProps<'button'>, 'ref'>;
+
+interface ButtonProps extends ButtonBaseProps {
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
   isLoading?: boolean;
   fullWidth?: boolean;
