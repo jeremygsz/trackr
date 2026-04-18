@@ -36,7 +36,7 @@ export const Button: React.FC<ButtonProps> = ({
     >
       <span className={styles.content}>
         {isLoading ? (
-          <div className={styles.loader} aria-label="Chargement..." />
+          <span className={styles.loader} aria-label="Chargement..." />
         ) : (
           children
         )}

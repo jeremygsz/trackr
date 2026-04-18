@@ -18,7 +18,7 @@ export default auth((req) => {
   // 2. Handle Authentication logic
   if (isPublicRoute || isApiRegisterRoute) {
     if (isLoggedIn) {
-      return NextResponse.redirect(new URL("/", nextUrl));
+      return NextResponse.redirect(new URL("/dashboard", nextUrl));
     }
     return NextResponse.next();
   }
