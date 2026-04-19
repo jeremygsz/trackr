@@ -40,8 +40,8 @@
 // GLASS CARD
 // ============================================
 
-@mixin glass-card($blur: 12px, $opacity: 0.06) {
-  background: rgba(255, 255, 255, $opacity);
+@mixin glass-card($blur: 12px, $opacity: 0.2) {
+  background: rgba(18, 18, 30, $opacity);
   backdrop-filter: blur($blur);
   -webkit-backdrop-filter: blur($blur);
   border: 1px solid $border-subtle;

@@ -1,0 +1,103 @@
+@use "@/styles/variables" as *;
+
+.statCard {
+  background: $bg-surface;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-lg;
+  padding: $space-5;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+  transition: $transition-base;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: transparent;
+    transition: $transition-base;
+  }
+
+  &:hover {
+    border-color: $border-active;
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+
+    &::before {
+      background: currentColor;
+    }
+  }
+
+  &.primary {
+    color: $blue-primary;
+    .iconWrapper { background: $blue-glow-soft; color: $blue-primary; }
+  }
+  &.success {
+    color: $color-success;
+    .iconWrapper { background: $color-success-soft; color: $color-success; }
+  }
+  &.danger {
+    color: $color-danger;
+    .iconWrapper { background: $color-danger-soft; color: $color-danger; }
+  }
+  &.warning {
+    color: $color-warning;
+    .iconWrapper { background: $color-warning-soft; color: $color-warning; }
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.iconWrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trend {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  padding: $space-1 $space-2;
+  border-radius: $radius-full;
+  
+  &.positive {
+    background: $color-success-soft;
+    color: $color-success;
+  }
+  
+  &.negative {
+    background: $color-danger-soft;
+    color: $color-danger;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+}
+
+.label {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  font-weight: $font-weight-medium;
+}
+
+.value {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+  margin: 0;
+}

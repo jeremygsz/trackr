@@ -1,8 +1,106 @@
+@use "@/styles/variables" as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+  width: 100%;
+}
+
+.typeSelector {
+  display: flex;
+  background: $bg-elevated;
+  padding: $space-1;
+  border-radius: $radius-lg;
+  border: 1px solid $border-subtle;
+}
+
+.typeBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  padding: $space-2;
+  border-radius: $radius-md;
+  border: none;
+  background: transparent;
+  color: $text-secondary;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: $transition-base;
+
+  svg {
+    opacity: 0.7;
+  }
+
+  &:hover {
+    color: $text-primary;
+    background: rgba($white, 0.03);
+  }
+
+  &.active {
+    background: $bg-surface;
+    color: $blue-primary;
+    box-shadow: $shadow-sm;
+    border: 1px solid $border-subtle;
+
+    svg {
+      opacity: 1;
+    }
+  }
+}
+
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 1.5rem;
-  background: white;
-  border-radius: 12px;
+  gap: $space-4;
+}
+
+.compactGrid {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.threeCols {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.2fr;
+  gap: $space-3;
+
+  @media (max-width: $bp-md) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: $bp-sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.twoCols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-3;
+
+  @media (max-width: $bp-sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.actions {
+  margin-top: $space-2;
+}
+
+.formError {
+  color: $color-danger;
+  font-size: $font-size-xs;
+  background: $color-danger-soft;
+  padding: $space-2;
+  border-radius: $radius-md;
+  text-align: center;
 }

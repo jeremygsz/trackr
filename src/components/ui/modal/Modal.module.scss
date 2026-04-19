@@ -1,27 +1,71 @@
+@use "@/styles/variables" as *;
+
 .overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  padding: $space-4;
 }
 
 .content {
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 500px;
+  background: $bg-surface;
+  border: 1px solid $border-default;
+  padding: $space-6;
+  border-radius: $radius-xl;
+  width: 100%;
+  max-width: 650px;
+  max-height: calc(100vh - #{$space-8});
+  overflow-y: auto;
+  box-shadow: $shadow-lg;
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: $border-default transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $border-default;
+    border-radius: $radius-full;
+  }
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: $space-6;
+
+  h2 {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
+    margin: 0;
+  }
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  color: $text-secondary;
+  cursor: pointer;
+  padding: $space-2;
+  border-radius: $radius-full;
+  transition: $transition-base;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: $bg-elevated;
+    color: $text-primary;
+  }
 }

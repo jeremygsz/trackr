@@ -1,0 +1,78 @@
+@use "@/styles/variables" as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  width: 100%;
+}
+
+.label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-secondary;
+}
+
+.selectWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: $bg-elevated;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-md;
+  transition: $transition-base;
+
+  &:focus-within {
+    border-color: $blue-primary;
+    box-shadow: 0 0 0 2px $blue-glow-soft;
+  }
+
+  &.hasError {
+    border-color: $color-danger;
+  }
+}
+
+.icon {
+  padding-left: $space-3;
+  color: $text-muted;
+  display: flex;
+  align-items: center;
+}
+
+.select {
+  width: 100%;
+  padding: $space-3 $space-4;
+  padding-right: $space-10;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: $text-primary;
+  font-family: $font-primary;
+  font-size: $font-size-base;
+  appearance: none;
+  cursor: pointer;
+
+  option {
+    background: $bg-surface;
+    color: $text-primary;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.arrow {
+  position: absolute;
+  right: $space-3;
+  pointer-events: none;
+  color: $text-muted;
+  display: flex;
+  align-items: center;
+}
+
+.errorText {
+  font-size: $font-size-xs;
+  color: $color-danger;
+}

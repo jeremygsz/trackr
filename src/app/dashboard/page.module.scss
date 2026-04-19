@@ -1,19 +1,82 @@
+@use "@/styles/variables" as *;
+
 .dashboard {
-  padding: 2rem;
+  padding: $space-8;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: $space-10;
+  max-width: $content-max-width;
+  margin: 0 auto;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  color: $text-secondary;
+  font-size: $font-size-lg;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  .titleGroup {
+    h1 {
+      font-size: $font-size-4xl;
+      font-weight: $font-weight-bold;
+      color: $text-primary;
+      margin-bottom: $space-2;
+      letter-spacing: $letter-spacing-tight;
+    }
+
+    p {
+      color: $text-secondary;
+      font-size: $font-size-base;
+    }
+  }
 }
 
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-6;
+
+  @media (max-width: $bp-lg) {
+    grid-template-columns: 1fr;
+  }
 }
 
-.chartContainer {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+.mainGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: $space-6;
+
+  @media (max-width: $bp-xl) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.leftCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.rightCol {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.viewAll {
+  margin-top: $space-2;
+  align-self: flex-end;
+  color: $blue-primary;
+  gap: $space-2;
+  
+  &:hover {
+    background: $blue-glow-soft;
+  }
 }

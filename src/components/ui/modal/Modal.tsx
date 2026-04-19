@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './Modal.module.scss';
-import { Button } from '@/components/ui/button/Button';
+import { X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface ModalProps {
   isOpen: boolean;
@@ -12,17 +13,40 @@ interface ModalProps {
 }
 
 export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
-  if (!isOpen) return null;
+  
+  // Prevent scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.content} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.header}>
-          <h3>{title}</h3>
-          <Button variant="ghost" onClick={onClose}>×</Button>
+    <AnimatePresence>
+      {isOpen && (
+        <div className={styles.overlay} onClick={onClose}>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className={styles.content} 
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={styles.header}>
+              <h2>{title}</h2>
+              <button className={styles.closeButton} onClick={onClose} aria-label="Fermer">
+                <X size={24} />
+              </button>
+            </div>
+            {children}
+          </motion.div>
         </div>
-        {children}
-      </div>
-    </div>
+      )}
+    </AnimatePresence>
   );
 };
