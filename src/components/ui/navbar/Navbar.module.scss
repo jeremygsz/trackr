@@ -60,6 +60,7 @@
   align-items: center;
   gap: $space-2;
 
+  // Show burger menu earlier (at tablet size)
   @media (max-width: $bp-lg) {
     display: none;
   }
@@ -99,22 +100,185 @@
   align-items: center;
   gap: $space-6;
 
-  @media (max-width: $bp-md) {
+  // Keep actions visible until mobile size, but allow some wrapping/hiding logic
+  @media (max-width: $bp-sm) {
     display: none;
+  }
+}
+
+.userMenuContainer {
+  position: relative;
+}
+
+.userTrigger {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-1 $space-2;
+  background: transparent;
+  border: none;
+  border-radius: $radius-full;
+  cursor: pointer;
+  transition: $transition-base;
+
+  &:hover {
+    background: $bg-elevated;
+  }
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  background: $blue-primary;
+  border-radius: $radius-full;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+  flex-shrink: 0;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+
+  @media (max-width: $bp-lg) {
+    display: none;
+  }
+}
+
+.userName {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-primary;
+}
+
+.chevron {
+  color: $text-secondary;
+  transition: transform 0.2s ease;
+
+  &.open {
+    transform: rotate(180deg);
+  }
+}
+
+.userDropdown {
+  position: absolute;
+  top: calc(100% + $space-2);
+  right: 0;
+  width: 220px;
+  background: $bg-surface;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-lg;
+  padding: $space-2;
+  z-index: 101;
+}
+
+.dropdownHeader {
+  padding: $space-3 $space-4;
+
+  .fullName {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    color: $text-primary;
+    margin: 0;
+  }
+
+  .email {
+    font-size: $font-size-xs;
+    color: $text-secondary;
+    margin: 0;
+  }
+}
+
+.dropdownDivider {
+  height: 1px;
+  background: $border-subtle;
+  margin: $space-1 0;
+}
+
+.dropdownTheme {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-2 $space-4;
+  
+  .themeLabel {
+    font-size: $font-size-xs;
+    color: $text-secondary;
+    font-weight: $font-weight-medium;
+  }
+
+  :global(.toggleGroup) {
+    transform: scale(0.9);
+    transform-origin: right center;
+  }
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-2 $space-4;
+  border-radius: $radius-md;
+  color: $text-secondary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  transition: $transition-base;
+  text-align: left;
+
+  &:hover {
+    background: $bg-elevated;
+    color: $text-primary;
+  }
+
+  &.logout {
+    color: $color-danger;
+    
+    &:hover {
+      background: $color-danger-soft;
+      color: $color-danger;
+    }
   }
 }
 
 .newBtn {
   height: 40px !important;
   padding: 0 $space-5 !important;
-  gap: $space-2 !important;
   font-size: $font-size-sm !important;
 
+  // Targeting the internal content span of the Button component
+  & > span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-2;
+    height: 100%;
+  }
+
   @media (max-width: $bp-lg) {
-    span { display: none; }
+    span { 
+      span { display: inline; }
+    }
+    width: auto;
+    padding: 0 $space-5 !important;
+  }
+
+  @media (max-width: $bp-md) {
+    span {
+      span { display: none; }
+    }
     width: 40px;
     padding: 0 !important;
-    justify-content: center;
   }
 }
 
@@ -132,7 +296,8 @@
     background: $bg-elevated;
   }
 
-  @media (max-width: $bp-md) {
+  // Switch to burger menu at $bp-lg (tablet) instead of $bp-md
+  @media (max-width: $bp-lg) {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -150,7 +315,8 @@
   box-shadow: $shadow-lg;
   z-index: 99;
 
-  @media (min-width: $bp-md) {
+  // Show mobile menu at tablet size
+  @media (min-width: $bp-lg) {
     display: none;
   }
 }
@@ -159,6 +325,39 @@
   display: flex;
   flex-direction: column;
   gap: $space-2;
+}
+
+.mobileUserHeader {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  padding: $space-4;
+  margin-bottom: $space-2;
+  background: $bg-elevated;
+  border-radius: $radius-lg;
+
+  .avatar {
+    width: 48px;
+    height: 48px;
+    font-size: $font-size-base;
+  }
+}
+
+.mobileUserInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.mobileUserName {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+}
+
+.mobileUserEmail {
+  font-size: $font-size-xs;
+  color: $text-secondary;
 }
 
 .mobileLink {
@@ -184,6 +383,22 @@
   }
 }
 
+.mobileTheme {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-4;
+  background: $bg-elevated;
+  border-radius: $radius-lg;
+  margin-top: $space-2;
+  
+  .themeLabel {
+    font-size: $font-size-base;
+    color: $text-secondary;
+    font-weight: $font-weight-medium;
+  }
+}
+
 .mobileActions {
   margin-top: $space-4;
   padding-top: $space-4;
@@ -193,15 +408,11 @@
   gap: $space-4;
 }
 
-.mobileTheme {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 $space-4;
-  
-  span {
-    font-size: $font-size-sm;
-    color: $text-secondary;
-    font-weight: $font-weight-medium;
+.mobileLogout {
+  color: $color-danger !important;
+  border-color: rgba($color-danger, 0.2) !important;
+
+  &:hover {
+    background: rgba($color-danger, 0.05) !important;
   }
 }
