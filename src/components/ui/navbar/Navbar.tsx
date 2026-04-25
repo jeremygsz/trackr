@@ -236,7 +236,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNewTransaction }) => {
                 </Button>
                 
                 <Button 
-                  variant="outline"
+                  variant="ghost"
                   onClick={handleSignOut}
                   fullWidth
                   className={styles.mobileLogout}
