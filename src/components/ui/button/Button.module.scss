@@ -30,11 +30,12 @@
 
   &.primary {
     background: $blue-primary;
-    @include glow-blue(0.2);
+    color: white;
+    @include glow-blue(0.15);
     
     &:hover:not(:disabled) {
       background: $blue-hover;
-      @include glow-blue(0.4);
+      @include glow-blue(0.25);
     }
   }
 

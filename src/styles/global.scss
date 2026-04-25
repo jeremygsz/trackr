@@ -2,12 +2,9 @@
 @use 'mixins' as *;
 @use 'animations';
 
-// Google Fonts
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
-
-// ============================================
-// RESET
-// ============================================
+/* ============================================
+   RESET
+   ============================================ */
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -31,6 +28,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   @include custom-scrollbar;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 a {
@@ -49,9 +47,15 @@ input, textarea, select {
   font-size: inherit;
 }
 
-// ============================================
-// TYPOGRAPHY UTILITIES
-// ============================================
+/* Resetting default focus for accessibility */
+*:focus-visible {
+  outline: 2px solid $blue-primary;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   TYPOGRAPHY UTILITIES
+   ============================================ */
 
 .text-primary   { color: $text-primary; }
 .text-secondary { color: $text-secondary; }
@@ -63,9 +67,9 @@ input, textarea, select {
 .text-mono      { font-family: $font-mono; }
 .text-gradient  { @include glow-text-blue; }
 
-// ============================================
-// LAYOUT UTILITIES
-// ============================================
+/* ============================================
+   LAYOUT UTILITIES
+   ============================================ */
 
 .container {
   width: 100%;

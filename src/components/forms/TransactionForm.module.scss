@@ -5,6 +5,7 @@
   flex-direction: column;
   gap: $space-6;
   width: 100%;
+  position: relative;
 }
 
 .typeSelector {
@@ -37,7 +38,7 @@
 
   &:hover {
     color: $text-primary;
-    background: rgba($white, 0.03);
+    background: rgba($pure-white, 0.03);
   }
 
   &.active {
@@ -64,9 +65,19 @@
   gap: $space-4;
 }
 
+.labelStoreGrid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: $space-4;
+
+  @media (max-width: $bp-sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
 .threeCols {
   display: grid;
-  grid-template-columns: 1fr 1fr 1.2fr;
+  grid-template-columns: 0.8fr 1fr 1.2fr;
   gap: $space-3;
 
   @media (max-width: $bp-md) {
@@ -75,6 +86,37 @@
 
   @media (max-width: $bp-sm) {
     grid-template-columns: 1fr;
+  }
+}
+
+.withAction {
+  display: flex;
+  align-items: flex-end;
+  gap: $space-2;
+  
+  & > :first-child {
+    flex: 1;
+  }
+}
+
+.quickAdd {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $bg-elevated;
+  border: 1px solid $border-subtle;
+  border-radius: $radius-md;
+  color: $blue-primary;
+  transition: $transition-base;
+  margin-bottom: 0;
+
+  &:hover {
+    background: $bg-overlay;
+    border-color: $blue-primary;
+    transform: translateY(-1px);
   }
 }
 
@@ -103,4 +145,91 @@
   padding: $space-2;
   border-radius: $radius-md;
   text-align: center;
+}
+
+/* QUICK ADD OVERLAY STYLES */
+
+.overlay {
+  position: absolute;
+  inset: -24px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  border-radius: $radius-xl;
+  padding: $space-6;
+}
+
+.overlayContent {
+  background: $bg-surface;
+  border: 1px solid $border-default;
+  border-radius: $radius-lg;
+  width: 100%;
+  max-width: 340px;
+  padding: $space-5;
+  box-shadow: $shadow-lg;
+}
+
+.overlayHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $space-4;
+
+  h3 {
+    font-size: $font-size-base;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
+    margin: 0;
+  }
+
+  button {
+    background: transparent;
+    border: none;
+    color: $text-muted;
+    cursor: pointer;
+    &:hover { color: $text-primary; }
+  }
+}
+
+.overlayBody {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.quickAddToggle {
+  display: flex;
+  background: $bg-elevated;
+  padding: 2px;
+  border-radius: $radius-md;
+  margin-bottom: $space-1;
+
+  button {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: $space-2;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    color: $text-secondary;
+    border-radius: $radius-sm;
+    cursor: pointer;
+    transition: $transition-base;
+
+    &.active {
+      background: $bg-surface;
+      color: $blue-primary;
+      box-shadow: $shadow-sm;
+    }
+  }
+}
+
+.overlayActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-2;
+  margin-top: $space-2;
 }

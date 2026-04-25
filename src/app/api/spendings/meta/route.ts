@@ -22,7 +22,17 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json({ categories, banks });
+    const stores = await prisma.store.findMany({
+      where: {
+        OR: [
+          { userId: session.user.id },
+          { userId: null },
+        ],
+      },
+      orderBy: { label: 'asc' },
+    });
+
+    return NextResponse.json({ categories, banks, stores });
   } catch (error) {
     return NextResponse.json({ error: 'Erreur lors du chargement' }, { status: 500 });
   }

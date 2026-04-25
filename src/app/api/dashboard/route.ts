@@ -1,7 +1,16 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
-import { startOfMonth, endOfMonth, subMonths, format, startOfDay, endOfDay, subDays } from 'date-fns';
+import { 
+  startOfMonth, 
+  endOfMonth, 
+  subMonths, 
+  format, 
+  startOfDay, 
+  endOfDay, 
+  subDays, 
+  startOfWeek 
+} from 'date-fns';
 
 export async function GET() {
   const session = await auth();
@@ -9,13 +18,37 @@ export async function GET() {
 
   const userId = session.user.id;
   const now = new Date();
+  
+  // Date ranges
+  const todayStart = startOfDay(now);
+  const todayEnd = endOfDay(now);
+  
+  const thisWeekStart = startOfWeek(now, { weekStartsOn: 1 }); // Starts on Monday
+  
   const currentMonthStart = startOfMonth(now);
   const currentMonthEnd = endOfMonth(now);
+  
   const lastMonthStart = startOfMonth(subMonths(now, 1));
   const lastMonthEnd = endOfMonth(subMonths(now, 1));
 
   try {
-    // 1. Total Spendings (Current vs Last Month)
+    // 1. Daily Spending
+    const dailySpending = await prisma.spendingLine.aggregate({
+      where: {
+        spending: { userId, spendingDate: { gte: todayStart, lte: todayEnd } }
+      },
+      _sum: { amountNet: true }
+    });
+
+    // 2. Weekly Spending
+    const weeklySpending = await prisma.spendingLine.aggregate({
+      where: {
+        spending: { userId, spendingDate: { gte: thisWeekStart, lte: todayEnd } }
+      },
+      _sum: { amountNet: true }
+    });
+
+    // 3. Monthly Spendings (Current vs Last Month)
     const currentSpendings = await prisma.spendingLine.aggregate({
       where: {
         spending: { userId, spendingDate: { gte: currentMonthStart, lte: currentMonthEnd } }
@@ -30,13 +63,13 @@ export async function GET() {
       _sum: { amountNet: true }
     });
 
-    // 2. Subscriptions
+    // 4. Subscriptions
     const activeSubscriptions = await prisma.subscription.aggregate({
       where: { userId, isActive: true },
       _sum: { amount: true }
     });
 
-    // 3. Recent Transactions
+    // 5. Recent Transactions
     const recentSpendings = await prisma.spending.findMany({
       where: { userId },
       take: 5,
@@ -53,7 +86,7 @@ export async function GET() {
       type: 'spending'
     }));
 
-    // 4. Chart Data (Last 7 days)
+    // 6. Chart Data (Last 7 days)
     const chartData = [];
     for (let i = 6; i >= 0; i--) {
       const date = subDays(now, i);
@@ -79,10 +112,12 @@ export async function GET() {
 
     return NextResponse.json({
       stats: {
+        dailySpending: Number(dailySpending._sum.amountNet || 0),
+        weeklySpending: Number(weeklySpending._sum.amountNet || 0),
         totalSpending: currentTotal,
         spendingTrend: Math.round(spendingTrend),
         activeSubscriptions: Number(activeSubscriptions._sum.amount || 0),
-        budgetRemaining: 1500 - currentTotal, // Mock budget for now
+        budgetRemaining: 1500 - currentTotal, // Mock budget
       },
       chartData,
       transactions

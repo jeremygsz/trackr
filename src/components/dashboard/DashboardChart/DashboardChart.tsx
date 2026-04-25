@@ -11,6 +11,7 @@ import {
   Tooltip, 
   ResponsiveContainer 
 } from 'recharts';
+import { useTheme } from '@/lib/theme-context';
 
 interface DashboardChartProps {
   title: string;
@@ -25,8 +26,15 @@ export const DashboardChart: React.FC<DashboardChartProps> = ({
   data,
   dataKey,
   categoryKey,
-  color = '#2563eb'
+  color = '#3b82f6'
 }) => {
+  const { resolvedTheme } = useTheme();
+  
+  const gridColor = resolvedTheme === 'dark' ? '#1e293b' : '#e2e8f0';
+  const textColor = resolvedTheme === 'dark' ? '#94a3b8' : '#64748b';
+  const tooltipBg = resolvedTheme === 'dark' ? '#0f172a' : '#ffffff';
+  const tooltipBorder = resolvedTheme === 'dark' ? '#334155' : '#e2e8f0';
+
   return (
     <div className={styles.chartCard}>
       <h3 className={styles.title}>{title}</h3>
@@ -39,27 +47,27 @@ export const DashboardChart: React.FC<DashboardChartProps> = ({
                 <stop offset="95%" stopColor={color} stopOpacity={0}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#252540" />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridColor} />
             <XAxis 
               dataKey={categoryKey} 
               axisLine={false}
               tickLine={false}
-              tick={{ fill: '#475569', fontSize: 12 }}
+              tick={{ fill: textColor, fontSize: 12 }}
             />
             <YAxis 
               axisLine={false}
               tickLine={false}
-              tick={{ fill: '#475569', fontSize: 12 }}
+              tick={{ fill: textColor, fontSize: 12 }}
               tickFormatter={(value) => `${value}€`}
             />
             <Tooltip 
               contentStyle={{ 
-                backgroundColor: '#12121e', 
-                border: '1px solid #252540',
+                backgroundColor: tooltipBg, 
+                border: `1px solid ${tooltipBorder}`,
                 borderRadius: '8px',
-                color: '#f8fafc'
+                color: resolvedTheme === 'dark' ? '#f8fafc' : '#0f172a'
               }}
-              itemStyle={{ color: '#2563eb' }}
+              itemStyle={{ color: color }}
             />
             <Area 
               type="monotone" 

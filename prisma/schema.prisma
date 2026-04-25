@@ -66,6 +66,7 @@ model User {
   spendings       Spending[]
   subscriptions   Subscription[]
   installments    Installment[]
+  incomes         Income[]
   categories      Category[]
   subcategories   Subcategory[]
   banks           Bank[]
@@ -90,8 +91,36 @@ model Bank {
   spendingLines SpendingLine[]
   subscriptions Subscription[]
   installments  Installment[]
+  incomes       Income[]
 
   @@index([userId])
+}
+
+// ============================================
+// INCOME (rentrée d'argent)
+// ============================================
+
+model Income {
+  id            String     @id @default(cuid())
+  userId        String
+  label         String
+  amount        Decimal    @db.Decimal(10, 2)
+  currency      String     @default("EUR")
+  date          DateTime
+  recurrency    Recurrency? // null = ponctuel
+  subcategoryId String
+  bankId        String
+  notes         String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  user        User        @relation(fields: [userId], references: [id])
+  subcategory Subcategory @relation(fields: [subcategoryId], references: [id])
+  bank        Bank        @relation(fields: [bankId], references: [id])
+
+  @@index([userId])
+  @@index([subcategoryId])
+  @@index([bankId])
 }
 
 // ============================================
@@ -132,6 +161,7 @@ model Subcategory {
   spendings     Spending[]
   subscriptions Subscription[]
   installments  Installment[]
+  incomes       Income[]
 
   @@index([categoryId])
   @@index([createdBy])

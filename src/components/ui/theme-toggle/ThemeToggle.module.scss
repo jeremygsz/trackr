@@ -1,0 +1,36 @@
+@use "@/styles/variables" as *;
+
+.toggleGroup {
+  display: flex;
+  background: $bg-elevated;
+  padding: $space-1;
+  border-radius: $radius-full;
+  border: 1px solid $border-subtle;
+  width: fit-content;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: $radius-full;
+  border: none;
+  background: transparent;
+  color: $text-secondary;
+  cursor: pointer;
+  transition: $transition-base;
+
+  &:hover {
+    color: $text-primary;
+    background: rgba($blue-primary, 0.1);
+  }
+
+  &.active {
+    background: $bg-surface;
+    color: $blue-primary;
+    box-shadow: $shadow-sm;
+    border: 1px solid $border-subtle;
+  }
+}

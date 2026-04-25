@@ -64,7 +64,34 @@ async function main() {
       });
     }
 
-    // 4. CATEGORIES & SUBCATEGORIES
+    // 4. STORES (Global)
+    const stores = [
+      { label: 'Monoprix', logo: 'https://www.monoprix.fr/favicon.ico', website: 'https://www.monoprix.fr' },
+      { label: "Monop'", logo: 'https://www.monoprix.fr/favicon.ico', website: 'https://www.monoprix.fr' },
+      { label: 'Franprix', logo: 'https://www.franprix.fr/favicon.ico', website: 'https://www.franprix.fr' },
+      { label: 'Carrefour', logo: 'https://www.carrefour.fr/favicon.ico', website: 'https://www.carrefour.fr' },
+      { label: 'Lidl', logo: 'https://www.lidl.fr/favicon.ico', website: 'https://www.lidl.fr' },
+      { label: 'E.Leclerc', logo: 'https://www.e.leclerc/favicon.ico', website: 'https://www.e.leclerc' },
+      { label: 'Auchan', logo: 'https://www.auchan.fr/favicon.ico', website: 'https://www.auchan.fr' },
+      { label: 'Amazon', logo: 'https://www.amazon.fr/favicon.ico', website: 'https://www.amazon.fr' },
+      { label: 'Apple', logo: 'https://www.apple.com/favicon.ico', website: 'https://www.apple.com' },
+      { label: 'Netflix', logo: 'https://www.netflix.com/favicon.ico', website: 'https://www.netflix.com' },
+    ];
+
+    for (const store of stores) {
+      await prisma.store.upsert({
+        where: { id: `store-${store.label.toLowerCase().replace(/\s/g, '-')}` },
+        update: { logo: store.logo, website: store.website },
+        create: {
+          id: `store-${store.label.toLowerCase().replace(/\s/g, '-')}`,
+          label: store.label,
+          logo: store.logo,
+          website: store.website,
+        },
+      });
+    }
+
+    // 5. CATEGORIES & SUBCATEGORIES
     const categories = [
       {
         label: 'Alimentaire',
@@ -101,6 +128,12 @@ async function main() {
         icon: 'heart-pulse',
         color: '#10b981',
         subs: ['Pharmacie', 'Médecin', 'Mutuelle']
+      },
+      {
+        label: 'Revenus',
+        icon: 'trending-up',
+        color: '#10b981',
+        subs: ['Salaire', 'Freelance', 'Ventes (Vinted...)', 'Cadeaux', 'Dividendes']
       },
     ];
 
