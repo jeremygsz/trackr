@@ -2,35 +2,73 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
 
-export async function POST(req: Request) {
+export async function GET() {
   const session = await auth();
-  if (!session) return NextResponse.json({ status: 401 });
+  if (!session?.user?.id) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
 
   try {
-    const { label, parentId } = await req.json();
+    const categories = await prisma.category.findMany({
+      where: {
+        OR: [
+          { createdBy: session.user.id },
+          { createdBy: null }
+        ]
+      },
+      include: {
+        subcategories: {
+          where: {
+            OR: [
+              { createdBy: session.user.id },
+              { createdBy: null }
+            ]
+          },
+          orderBy: { label: 'asc' }
+        }
+      },
+      orderBy: { label: 'asc' }
+    });
+    return NextResponse.json(categories);
+  } catch (error) {
+    return NextResponse.json({ error: 'Erreur lors de la récupération' }, { status: 500 });
+  }
+}
 
-    if (parentId) {
-      // Create Subcategory
+export async function POST(req: Request) {
+  const session = await auth();
+  if (!session?.user?.id) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+
+  try {
+    const { label, color, icon, type, categoryId } = await req.json();
+
+    if (!label) {
+      return NextResponse.json({ error: 'Le libellé est requis' }, { status: 400 });
+    }
+
+    if (type === 'subcategory') {
+      if (!categoryId) return NextResponse.json({ error: 'ID de catégorie parente requis' }, { status: 400 });
+      
       const subcategory = await prisma.subcategory.create({
         data: {
           label,
-          categoryId: parentId,
+          color,
+          icon,
+          categoryId,
           createdBy: session.user.id,
         },
       });
-      return NextResponse.json({ ...subcategory, type: 'subcategory' });
+      return NextResponse.json(subcategory);
     } else {
-      // Create Main Category
       const category = await prisma.category.create({
         data: {
           label,
+          color,
+          icon,
           createdBy: session.user.id,
         },
       });
-      return NextResponse.json({ ...category, type: 'category' });
+      return NextResponse.json(category);
     }
   } catch (error) {
-    console.error(error);
     return NextResponse.json({ error: 'Erreur lors de la création' }, { status: 500 });
   }
 }
