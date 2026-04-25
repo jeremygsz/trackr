@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import styles from './Select.module.scss';
 import { ChevronDown, Search, X } from 'lucide-react';
 
@@ -92,7 +93,13 @@ export const Select: React.FC<SelectProps> = ({
 
       <AnimatePresence>
         {isOpen && (
-          <div className={styles.dropdown}>
+          <motion.div 
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            transition={{ duration: 0.15 }}
+            className={styles.dropdown}
+          >
             <div className={styles.searchWrapper}>
               <Search size={14} className={styles.searchIcon} />
               <input
@@ -131,7 +138,7 @@ export const Select: React.FC<SelectProps> = ({
                 <div className={styles.noResults}>Aucun résultat trouvé</div>
               )}
             </div>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
 
@@ -139,6 +146,3 @@ export const Select: React.FC<SelectProps> = ({
     </div>
   );
 };
-
-// Internal wrapper to avoid dependency issues if Framer Motion is used
-const AnimatePresence = ({ children }: { children: React.ReactNode }) => <>{children}</>;

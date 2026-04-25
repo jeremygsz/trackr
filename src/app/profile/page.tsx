@@ -169,7 +169,7 @@ export default function ProfilePage() {
                 <Select
                   name="currency"
                   value={formData.currency}
-                  onChange={handleChange}
+                  onChange={(val) => setFormData(prev => ({ ...prev, currency: val }))}
                   options={[
                     { value: 'EUR', label: 'Euro (€)' },
                     { value: 'USD', label: 'Dollar ($)' },
