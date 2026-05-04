@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "../styles/global.scss";
+@use "tailwindcss";
+@use "../styles/global.scss";
 
 :root {
   /* LIGHT THEME (Default) */
