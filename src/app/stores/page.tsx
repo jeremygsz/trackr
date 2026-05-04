@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Navbar } from '@/components/ui/navbar/Navbar';
 import { Modal } from '@/components/ui/modal/Modal';
 import { Button } from '@/components/ui/button/Button';
@@ -135,7 +136,16 @@ export default function StoresPage() {
               <div key={store.id} className={styles.storeCard}>
                 <div className={styles.storeInfo}>
                   <div className={styles.storeIcon}>
-                    <StoreIcon size={24} />
+                    {store.logo && (store.logo.startsWith('http') || store.logo.includes('/') || store.logo.includes('.')) ? (
+                      <Image 
+                        src={store.logo} 
+                        alt={store.label} 
+                        fill 
+                        className={styles.logoImg} 
+                      />
+                    ) : (
+                      <StoreIcon size={24} />
+                    )}
                   </div>
                   <div className={styles.storeDetails}>
                     <span className={styles.badge}>{store.userId ? 'Personnel' : 'Système'}</span>

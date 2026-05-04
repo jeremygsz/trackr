@@ -46,6 +46,10 @@ export const TransactionForm: React.FC<{ onSuccess?: () => void }> = ({ onSucces
       if (res.ok) {
         const data = await res.json();
         setMetaData(data);
+        // Si aucune banque n'est encore sélectionnée, on applique la banque par défaut
+        if (data.defaultBankId && !formState.bankId) {
+          setFormState(prev => ({ ...prev, bankId: data.defaultBankId }));
+        }
       }
     } catch (err) {
       console.error('Failed to fetch meta data', err);
@@ -149,7 +153,9 @@ export const TransactionForm: React.FC<{ onSuccess?: () => void }> = ({ onSucces
 
   const bankOptions = metaData?.banks.map(bank => ({
     value: bank.id,
-    label: bank.label
+    label: bank.label,
+    logo: bank.logo,
+    color: bank.color
   })) || [];
 
   const storeOptions = metaData?.stores.map(store => ({

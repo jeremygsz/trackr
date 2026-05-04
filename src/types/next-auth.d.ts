@@ -8,6 +8,7 @@ declare module 'next-auth' {
             firstname: string
             lastname: string
             role: string
+            onboardingCompleted: boolean
         } & DefaultSession['user']
     }
 
@@ -15,6 +16,7 @@ declare module 'next-auth' {
         firstname: string
         lastname: string
         role: string
+        onboardingCompleted: boolean
     }
 }
 
@@ -24,6 +26,7 @@ declare module 'next-auth/jwt' {
         firstname: string
         lastname: string
         role: string
+        onboardingCompleted: boolean
     }
 }
 
@@ -32,5 +35,6 @@ declare module "@auth/core/adapters" {
         firstname: string
         lastname: string
         role: string
+        onboardingCompleted: boolean
     }
 }

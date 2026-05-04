@@ -1,0 +1,172 @@
+@use "@/styles/variables" as *;
+
+.onboardingPage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-6;
+  background: $bg-deep;
+}
+
+.card {
+  width: 100%;
+  max-width: 800px;
+  background: $bg-surface;
+  border-radius: $radius-xl;
+  border: 1px solid $border-subtle;
+  padding: $space-10;
+  box-shadow: $shadow-lg;
+  position: relative;
+
+  @media (max-width: $bp-sm) {
+    padding: $space-6;
+  }
+}
+
+.topActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: $space-4;
+}
+
+.logoutButton {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  background: none;
+  border: none;
+  color: $text-secondary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  padding: $space-2 $space-3;
+  border-radius: $radius-md;
+  transition: $transition-base;
+
+  &:hover {
+    color: $danger;
+    background: rgba($danger, 0.1);
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: $space-10;
+
+  h1 {
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
+    margin-bottom: $space-2;
+  }
+
+  p {
+    color: $text-secondary;
+    font-size: $font-size-base;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: $space-4;
+  margin-bottom: $space-10;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: $space-2;
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $border-subtle;
+    border-radius: $radius-full;
+  }
+}
+
+.bankItem {
+  background: $pure-white;
+  border: 2px solid $border-subtle;
+  border-radius: $radius-lg;
+  padding: $space-4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-3;
+  cursor: pointer;
+  transition: $transition-base;
+  text-align: center;
+
+  &:hover {
+    border-color: $blue-primary;
+    background: $bg-elevated;
+  }
+
+  &.selected {
+    border-color: $blue-primary;
+    background: $blue-500;
+    box-shadow: 0 0 0 1px $blue-primary;
+    .bankIcon {
+      img{
+        opacity: 0;
+      }
+    }
+  }
+}
+
+.bankIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: $radius-lg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  overflow: hidden;
+  position: relative;
+  .checkOverlay {
+    position: absolute;
+    inset: 0;
+    background: rgba($blue-primary, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 2;
+  }
+}
+
+.logoImg {
+  object-fit: contain;
+  padding: $space-2;
+}
+
+.bankLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-primary;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+  align-items: center;
+}
+
+.selectionCount {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: $text-secondary;
+}

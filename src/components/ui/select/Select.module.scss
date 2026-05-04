@@ -51,6 +51,33 @@
   color: $text-muted;
 }
 
+.selectedContent {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+
+  .optionIcon {
+    width: 24px;
+    height: 24px;
+    border-radius: $radius-sm;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: bold;
+    color: white;
+    border: 1px solid $border-subtle;
+    position: relative;
+
+    img {
+      object-fit: contain;
+      padding: 2px;
+    }
+  }
+}
+
 .currentValue {
   flex: 1;
   font-size: $font-size-sm;
@@ -143,6 +170,9 @@
   border-radius: $radius-sm;
   cursor: pointer;
   transition: $transition-fast;
+  display: flex;
+  align-items: center;
+  gap: $space-3;
 
   &:hover {
     background: $bg-elevated;
@@ -153,6 +183,27 @@
     background: $blue-glow;
     color: $blue-primary;
     font-weight: $font-weight-medium;
+  }
+
+  .optionIcon {
+    width: 24px;
+    height: 24px;
+    border-radius: $radius-sm;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: bold;
+    color: white;
+    border: 1px solid $border-subtle;
+    position: relative;
+
+    img {
+      object-fit: contain;
+      padding: 2px;
+    }
   }
 }
 

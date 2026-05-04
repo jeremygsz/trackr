@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './Select.module.scss';
 import { ChevronDown, Search, X } from 'lucide-react';
@@ -8,6 +9,9 @@ import { ChevronDown, Search, X } from 'lucide-react';
 interface Option {
   value: string;
   label: string;
+  icon?: React.ReactNode;
+  logo?: string;
+  color?: string;
 }
 
 interface SelectProps {
@@ -81,7 +85,13 @@ export const Select: React.FC<SelectProps> = ({
         {icon && <span className={styles.icon}>{icon}</span>}
         
         <div className={styles.currentValue}>
-          {selectedOption ? selectedOption.label : <span className={styles.placeholder}>{placeholder}</span>}
+          {selectedOption ? (
+            <div className={styles.selectedContent}>
+              <span>{selectedOption.label}</span>
+            </div>
+          ) : (
+            <span className={styles.placeholder}>{placeholder}</span>
+          )}
         </div>
 
         <input type="hidden" name={name} value={value || ''} required={required} />
@@ -131,7 +141,7 @@ export const Select: React.FC<SelectProps> = ({
                       handleSelect(option.value);
                     }}
                   >
-                    {option.label}
+                    <span>{option.label}</span>
                   </div>
                 ))
               ) : (

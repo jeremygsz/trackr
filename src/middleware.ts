@@ -10,6 +10,7 @@ export default auth((req) => {
 
   const isApiAuthRoute = nextUrl.pathname.startsWith("/api/auth");
   const isApiRegisterRoute = nextUrl.pathname.startsWith("/api/register");
+  const isOnboardingRoute = nextUrl.pathname.startsWith("/onboarding");
   const isPublicRoute = ["/login", "/register"].includes(nextUrl.pathname);
 
   // 1. Allow API Auth routes (NextAuth internal)
@@ -18,7 +19,9 @@ export default auth((req) => {
   // 2. Handle Authentication logic
   if (isPublicRoute || isApiRegisterRoute) {
     if (isLoggedIn) {
-      return NextResponse.redirect(new URL("/dashboard", nextUrl));
+      const onboardingCompleted = req.auth?.user?.onboardingCompleted;
+      const target = onboardingCompleted ? "/dashboard" : "/onboarding/banks";
+      return NextResponse.redirect(new URL(target, nextUrl));
     }
     return NextResponse.next();
   }
@@ -28,10 +31,21 @@ export default auth((req) => {
     return NextResponse.redirect(new URL("/login", nextUrl));
   }
 
+  // 4. Onboarding check
+  const onboardingCompleted = req.auth?.user?.onboardingCompleted;
+  
+  if (!onboardingCompleted && !isOnboardingRoute) {
+    return NextResponse.redirect(new URL("/onboarding/banks", nextUrl));
+  }
+
+  if (onboardingCompleted && isOnboardingRoute) {
+    return NextResponse.redirect(new URL("/dashboard", nextUrl));
+  }
+
   return NextResponse.next();
 });
 
 // Optionally, don't invoke Middleware on some paths
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|banks|.*\\..*).*)"],
 };

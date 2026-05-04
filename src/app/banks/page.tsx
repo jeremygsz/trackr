@@ -1,13 +1,18 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Navbar } from '@/components/ui/navbar/Navbar';
 import { Modal } from '@/components/ui/modal/Modal';
 import { Button } from '@/components/ui/button/Button';
 import { Input } from '@/components/ui/input/Input';
 import { TransactionForm } from '@/components/forms/TransactionForm';
-import { Plus, Pencil, Trash2, Landmark, Wallet } from 'lucide-react';
+import { Plus, Pencil, Trash2, Landmark, Star, GripVertical, Save } from 'lucide-react';
 import styles from './page.module.scss';
+import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
+import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { toast, Toaster } from 'react-hot-toast';
 
 interface Bank {
   id: string;
@@ -15,6 +20,7 @@ interface Bank {
   color: string | null;
   logo: string | null;
   userId: string | null;
+  selected?: boolean;
 }
 
 const PRESET_COLORS = [
@@ -22,45 +28,117 @@ const PRESET_COLORS = [
   '#8b5cf6', '#ec4899', '#06b6d4', '#1f2937'
 ];
 
+const SortableBankCard = ({ bank, onEdit, onDelete, onSetDefault }: { 
+  bank: Bank; 
+  onEdit: (b: Bank) => void; 
+  onDelete: (id: string) => void;
+  onSetDefault: (id: string) => void;
+}) => {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: bank.id });
+  const style = { transform: CSS.Transform.toString(transform), transition };
+
+  return (
+    <div ref={setNodeRef} style={style} className={styles.bankCard}>
+      <div className={styles.bankInfo}>
+        <div {...attributes} {...listeners} className={styles.dragHandle}>
+          <GripVertical size={20} />
+        </div>
+        <div 
+          className={styles.bankIcon}
+          style={{ backgroundColor: bank.logo ? 'white' : (bank.color || '#3b82f6') }}
+        >
+          {bank.logo ? (
+            <Image src={bank.logo} alt={bank.label} fill unoptimized className={styles.logoImg} />
+          ) : (
+            bank.label.charAt(0).toUpperCase()
+          )}
+        </div>
+        <div className={styles.bankDetails}>
+          <div className={styles.bankTitleRow}>
+            <h3>{bank.label}</h3>
+            {bank.selected && <Star size={14} className={styles.defaultStar} fill="currentColor" />}
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.actions}>
+        {!bank.selected && (
+          <button className={`${styles.actionBtn} ${styles.starBtn}`} onClick={() => onSetDefault(bank.id)} title="Par défaut">
+            <Star size={16} />
+          </button>
+        )}
+        {bank.userId && (
+          <>
+            <button className={styles.actionBtn} onClick={() => onEdit(bank)}><Pencil size={16} /></button>
+            <button className={`${styles.actionBtn} ${styles.delete}`} onClick={() => onDelete(bank.id)}><Trash2 size={16} /></button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
 export default function BanksPage() {
   const [banks, setBanks] = useState<Bank[]>([]);
+  const [initialBanks, setInitialBanks] = useState<Bank[]>([]);
   const [loading, setLoading] = useState(true);
   const [isTransModalOpen, setIsTransModalOpen] = useState(false);
   const [isBankModalOpen, setIsBankModalOpen] = useState(false);
   const [editingBank, setEditingBank] = useState<Bank | null>(null);
+  const [isSavingOrder, setIsSavingOrder] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState({
-    label: '',
-    color: '#3b82f6',
-    logo: ''
-  });
+  const [formData, setFormData] = useState({ label: '', color: '#3b82f6', logo: '' });
 
-  useEffect(() => {
-    fetchBanks();
-  }, []);
+  useEffect(() => { fetchBanks(); }, []);
 
   const fetchBanks = async () => {
     try {
       const res = await fetch('/api/banks');
       const data = await res.json();
-      if (res.ok) setBanks(data);
-    } catch (err) {
-      console.error('Failed to fetch banks:', err);
+      if (res.ok) {
+        setBanks(data);
+        setInitialBanks(data);
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      setBanks((items) => {
+        const oldIndex = items.findIndex((b) => b.id === active.id);
+        const newIndex = items.findIndex((b) => b.id === over.id);
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  };
+
+  const saveOrder = async () => {
+    setIsSavingOrder(true);
+    try {
+      const res = await fetch('/api/banks/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bankIds: banks.map(b => b.id) })
+      });
+      if (!res.ok) throw new Error();
+      setInitialBanks(banks);
+      toast.success('Ordre sauvegardé !');
+    } catch {
+      toast.error('Erreur lors de la sauvegarde');
+    } finally {
+      setIsSavingOrder(false);
     }
   };
 
   const handleOpenBankModal = (bank: Bank | null = null) => {
     if (bank) {
       setEditingBank(bank);
-      setFormData({
-        label: bank.label,
-        color: bank.color || '#3b82f6',
-        logo: bank.logo || ''
-      });
+      setFormData({ label: bank.label, color: bank.color || '#3b82f6', logo: bank.logo || '' });
     } else {
       setEditingBank(null);
       setFormData({ label: '', color: '#3b82f6', logo: '' });
@@ -73,166 +151,106 @@ export default function BanksPage() {
     e.preventDefault();
     setIsSaving(true);
     setError(null);
-
     const method = editingBank ? 'PATCH' : 'POST';
     const url = editingBank ? `/api/banks/${editingBank.id}` : '/api/banks';
-
     try {
       const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData),
       });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        setIsBankModalOpen(false);
-        fetchBanks();
-      } else {
-        setError(data.error || 'Une erreur est survenue');
-      }
-    } catch (err) {
-      setError('Erreur de connexion au serveur');
-    } finally {
-      setIsSaving(false);
-    }
+      if (res.ok) { setIsBankModalOpen(false); fetchBanks(); }
+      else { setError((await res.json()).error || 'Erreur'); }
+    } finally { setIsSaving(false); }
   };
 
   const handleDeleteBank = async (id: string) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cette banque ?')) return;
-
-    try {
-      const res = await fetch(`/api/banks/${id}`, { method: 'DELETE' });
-      const data = await res.json();
-
-      if (res.ok) {
-        fetchBanks();
-      } else {
-        alert(data.error || 'Erreur lors de la suppression');
-      }
-    } catch (err) {
-      alert('Erreur de connexion au serveur');
+    if (!confirm('Supprimer cette banque ?')) return;
+    const res = await fetch(`/api/banks/${id}`, { method: 'DELETE' });
+    if (res.ok) {
+      toast.success('Banque supprimée');
+      fetchBanks();
+    } else {
+      toast.error('Erreur lors de la suppression');
     }
   };
 
+  const handleSetDefaultBank = async (bankId: string) => {
+    await fetch('/api/user/banks/default', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bankId }),
+    });
+    fetchBanks();
+  };
+
+  const hasChanged = JSON.stringify(banks) !== JSON.stringify(initialBanks);
+
   return (
     <>
+      <Toaster position="bottom-right" />
       <Navbar onNewTransaction={() => setIsTransModalOpen(true)} />
-      
       <main className={styles.banksPage}>
         <header className={styles.header}>
           <div>
             <h1>Banques</h1>
-            <p>Gérez vos comptes bancaires et moyens de paiement.</p>
+            <p>Gérez vos comptes bancaires.</p>
           </div>
-          <Button onClick={() => handleOpenBankModal()}>
-            <Plus size={18} />
-            Ajouter une banque
-          </Button>
+          <div>
+            <Button onClick={() => handleOpenBankModal()}>
+              <Plus size={18} /> Ajouter
+            </Button>
+          </div>
+          <div className={styles.actionsHeader}>
+            {hasChanged && (
+                <Button onClick={saveOrder} isLoading={isSavingOrder} variant="success">
+                  <Save size={18} /> Sauvegarder l'ordre
+                </Button>
+            )}
+          </div>
         </header>
 
         {loading ? (
-          <div className={styles.loading}>Chargement des banques...</div>
+          <div className={styles.loading}>Chargement...</div>
         ) : banks.length > 0 ? (
-          <div className={styles.grid}>
-            {banks.map((bank) => (
-              <div key={bank.id} className={styles.bankCard}>
-                <div className={styles.bankInfo}>
-                  <div 
-                    className={styles.bankIcon}
-                    style={{ backgroundColor: bank.color || '#3b82f6' }}
-                  >
-                    {bank.label.charAt(0).toUpperCase()}
-                  </div>
-                  <div className={styles.bankDetails}>
-                    <h3>{bank.label}</h3>
-                    <span>{bank.userId ? 'Personnel' : 'Système'}</span>
-                  </div>
-                </div>
-                
-                {bank.userId && (
-                  <div className={styles.actions}>
-                    <button 
-                      className={styles.actionBtn}
-                      onClick={() => handleOpenBankModal(bank)}
-                      title="Modifier"
-                    >
-                      <Pencil size={16} />
-                    </button>
-                    <button 
-                      className={`${styles.actionBtn} ${styles.delete}`}
-                      onClick={() => handleDeleteBank(bank.id)}
-                      title="Supprimer"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                )}
+          <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <SortableContext items={banks.map(b => b.id)} strategy={verticalListSortingStrategy}>
+              <div className={styles.list}>
+                {banks.map((bank) => (
+                  <SortableBankCard 
+                    key={bank.id} 
+                    bank={bank} 
+                    onEdit={handleOpenBankModal} 
+                    onDelete={handleDeleteBank}
+                    onSetDefault={handleSetDefaultBank}
+                  />
+                ))}
               </div>
-            ))}
-          </div>
+            </SortableContext>
+          </DndContext>
         ) : (
           <div className={styles.empty}>
             <Landmark size={48} />
-            <p>Vous n'avez pas encore ajouté de banque.</p>
-            <Button variant="secondary" onClick={() => handleOpenBankModal()}>
-              Ajouter ma première banque
-            </Button>
+            <p>Aucune banque ajoutée.</p>
+            <Button variant="secondary" onClick={() => handleOpenBankModal()}>Ajouter ma première banque</Button>
           </div>
         )}
 
-        {/* Modal Transaction */}
-        <Modal 
-          isOpen={isTransModalOpen} 
-          onClose={() => setIsTransModalOpen(false)} 
-          title="Ajouter une transaction"
-        >
+        <Modal isOpen={isTransModalOpen} onClose={() => setIsTransModalOpen(false)} title="Ajouter une transaction">
           <TransactionForm onSuccess={() => setIsTransModalOpen(false)} />
         </Modal>
 
-        {/* Modal Add/Edit Bank */}
-        <Modal 
-          isOpen={isBankModalOpen} 
-          onClose={() => setIsBankModalOpen(false)} 
-          title={editingBank ? 'Modifier la banque' : 'Ajouter une banque'}
-        >
+        <Modal isOpen={isBankModalOpen} onClose={() => setIsBankModalOpen(false)} title={editingBank ? 'Modifier' : 'Ajouter'}>
           <form onSubmit={handleSaveBank} className={styles.modalForm}>
             {error && <div className={styles.error}>{error}</div>}
-            
-            <Input 
-              label="Nom de la banque"
-              placeholder="Ex: Boursorama, Revolut, Espèces..."
-              value={formData.label}
-              onChange={(e) => setFormData({ ...formData, label: e.target.value })}
-              required
-              autoFocus
-            />
-
-            <Input 
-              label="URL du Logo (optionnel)"
-              placeholder="https://exemple.com/logo.png"
-              value={formData.logo}
-              onChange={(e) => setFormData({ ...formData, logo: e.target.value })}
-            />
-
+            <Input label="Nom" value={formData.label} onChange={(e) => setFormData({ ...formData, label: e.target.value })} required autoFocus />
             <div className={styles.colorPicker}>
               <label>Couleur</label>
               <div className={styles.colors}>
                 {PRESET_COLORS.map((c) => (
-                  <div 
-                    key={c}
-                    className={`${styles.colorOption} ${formData.color === c ? styles.active : ''}`}
-                    style={{ backgroundColor: c }}
-                    onClick={() => setFormData({ ...formData, color: c })}
-                  />
+                  <div key={c} className={`${styles.colorOption} ${formData.color === c ? styles.active : ''}`} style={{ backgroundColor: c }} onClick={() => setFormData({ ...formData, color: c })} />
                 ))}
               </div>
             </div>
-
-            <Button type="submit" isLoading={isSaving} fullWidth>
-              {editingBank ? 'Mettre à jour' : 'Créer la banque'}
-            </Button>
+            <Button type="submit" isLoading={isSaving} fullWidth>Enregistrer</Button>
           </form>
         </Modal>
       </main>

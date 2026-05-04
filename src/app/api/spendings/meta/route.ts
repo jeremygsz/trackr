@@ -13,14 +13,20 @@ export async function GET() {
       },
     });
 
-    const banks = await prisma.bank.findMany({
-      where: {
-        OR: [
-          { userId: session.user.id },
-          { userId: null },
-        ],
+    const userBanks = await prisma.userBank.findMany({
+      where: { userId: session.user.id },
+      include: {
+        bank: true,
       },
+      orderBy: { listOrder: 'asc' },
     });
+
+    const banks = userBanks.map(ub => ({
+      ...ub.bank,
+      selected: ub.selected,
+    }));
+
+    const defaultBankId = userBanks.find(ub => ub.selected)?.bankId || (banks.length > 0 ? banks[0].id : '');
 
     const stores = await prisma.store.findMany({
       where: {
@@ -32,7 +38,7 @@ export async function GET() {
       orderBy: { label: 'asc' },
     });
 
-    return NextResponse.json({ categories, banks, stores });
+    return NextResponse.json({ categories, banks, stores, defaultBankId });
   } catch (error) {
     return NextResponse.json({ error: 'Erreur lors du chargement' }, { status: 500 });
   }

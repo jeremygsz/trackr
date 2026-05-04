@@ -3,9 +3,12 @@
 .banksPage {
   min-height: calc(100vh - 72px);
   padding: $space-8 $space-6;
-  max-width: $content-max-width;
+  max-width: $bp-lg;
+  width: 95%;
   margin: 0 auto;
-
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   @media (max-width: $bp-sm) {
     padding: $space-4 $space-2;
   }
@@ -16,7 +19,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: $space-10;
-
+  flex-wrap: wrap;
+  width: 100%;
   @media (max-width: $bp-sm) {
     flex-direction: column;
     align-items: flex-start;
@@ -34,27 +38,34 @@
     color: $text-secondary;
     font-size: $font-size-base;
   }
+  .actionsHeader{
+    display: flex;
+    margin: $space-3 0;
+    width: 100%;
+  }
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: $space-6;
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+  width: 100%;
+
 }
 
 .bankCard {
   background: $bg-surface;
   border: 1px solid $border-subtle;
   border-radius: $radius-lg;
-  padding: $space-6;
+  padding: $space-4 $space-6;
   display: flex;
   align-items: center;
   justify-content: space-between;
   box-shadow: $shadow-sm;
   transition: $transition-base;
+  width: 100%;
 
   &:hover {
-    transform: translateY(-2px);
     box-shadow: $shadow-md;
     border-color: $blue-primary;
   }
@@ -78,16 +89,20 @@
   font-size: $font-size-xl;
   font-weight: $font-weight-bold;
   overflow: hidden;
+  position: relative;
+}
 
-  .logoImg {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    padding: $space-1;
-  }
+.logoImg {
+  object-fit: contain;
+  padding: $space-1;
 }
 
 .bankDetails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
   h3 {
     font-size: $font-size-lg;
     font-weight: $font-weight-semibold;
@@ -103,9 +118,40 @@
   }
 }
 
+.bankTitleRow {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.defaultStar {
+  color: $warning;
+}
+
+.starBtn {
+  color: $text-muted !important;
+  
+  &:hover {
+    color: $warning !important;
+    background: rgba($warning, 0.1) !important;
+    border-color: rgba($warning, 0.2) !important;
+  }
+}
+
 .actions {
   display: flex;
   gap: $space-2;
+}
+
+.dragHandle {
+  cursor: grab;
+  color: $text-muted;
+  display: flex;
+  align-items: center;
+  padding-right: $space-2;
+  &:hover {
+    color: $text-primary;
+  }
 }
 
 .actionBtn {

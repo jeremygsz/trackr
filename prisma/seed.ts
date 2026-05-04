@@ -44,19 +44,27 @@ async function main() {
 
     // 3. BANKS (Global)
     const banks = [
-      { label: 'Boursorama', color: '#004289', logo: 'https://www.boursorama.com/favicon.ico' },
-      { label: 'Société Générale', color: '#E4002B', logo: 'https://www.societegenerale.com/favicon.ico' },
-      { label: 'BNP Paribas', color: '#00965E', logo: 'https://group.bnpparibas/favicon.ico' },
-      { label: 'Revolut', color: '#000000', logo: 'https://www.revolut.com/favicon.ico' },
-      { label: 'Espèces (Cash)', color: '#10b981', logo: 'banknote' }, // Lucide icon name fallback
+      { label: 'BoursoBank', color: '#004289', logo: '/banks/bourso.svg' },
+      { label: 'Revolut', color: '#000000', logo: '/banks/revolut.svg' },
+      { label: 'N26', color: '#36A1AD', logo: '/banks/n26.svg' },
+      { label: 'Hello bank!', color: '#A4E200', logo: '/banks/hellobank.svg' },
+      { label: 'Fortuneo', color: '#132A3E', logo: '/banks/fortuneo.svg' },
+      { label: 'Société Générale', color: '#E4002B', logo: '/banks/soge.svg' },
+      { label: 'BNP Paribas', color: '#00965E', logo: '/banks/bnp.svg' },
+      { label: 'Crédit Agricole', color: '#007A5E', logo: '/banks/creditagricole.svg' },
+      { label: 'LCL', color: '#003087', logo: '/banks/lcl.svg' },
+      { label: 'Banque Populaire', color: '#004B9B', logo: '/banks/populaire.svg' },
+      { label: 'Caisse d\'Épargne', color: '#E30613', logo: '/banks/caisseepargne.svg' },
+      { label: 'CIC', color: '#003366', logo: '/banks/cic.svg' },
+      { label: 'American Express', color: '#006FCF', logo: '/banks/amex.svg' },
+      { label: 'Espèces', color: '#10b981', logo: '/banks/cash.svg' },
     ];
 
     for (const bank of banks) {
       await prisma.bank.upsert({
-        where: { id: `bank-${bank.label.toLowerCase().replace(/\s/g, '-')}` },
-        update: { label: bank.label, color: bank.color, logo: bank.logo },
+        where: { label: bank.label },
+        update: { color: bank.color, logo: bank.logo },
         create: {
-          id: `bank-${bank.label.toLowerCase().replace(/\s/g, '-')}`,
           label: bank.label,
           color: bank.color,
           logo: bank.logo,
@@ -80,10 +88,9 @@ async function main() {
 
     for (const store of stores) {
       await prisma.store.upsert({
-        where: { id: `store-${store.label.toLowerCase().replace(/\s/g, '-')}` },
+        where: { label: store.label },
         update: { logo: store.logo, website: store.website },
         create: {
-          id: `store-${store.label.toLowerCase().replace(/\s/g, '-')}`,
           label: store.label,
           logo: store.logo,
           website: store.website,
@@ -139,10 +146,9 @@ async function main() {
 
     for (const cat of categories) {
       const dbCat = await prisma.category.upsert({
-        where: { id: `cat-${cat.label.toLowerCase()}` },
+        where: { label: cat.label },
         update: { icon: cat.icon, color: cat.color },
         create: {
-          id: `cat-${cat.label.toLowerCase()}`,
           label: cat.label,
           icon: cat.icon,
           color: cat.color,
@@ -151,10 +157,14 @@ async function main() {
 
       for (const sub of cat.subs) {
         await prisma.subcategory.upsert({
-          where: { id: `sub-${sub.toLowerCase().replace(/\s/g, '-')}` },
-          update: { categoryId: dbCat.id },
+          where: { 
+            label_categoryId: {
+              label: sub,
+              categoryId: dbCat.id
+            }
+          },
+          update: {},
           create: {
-            id: `sub-${sub.toLowerCase().replace(/\s/g, '-')}`,
             label: sub,
             categoryId: dbCat.id,
           },

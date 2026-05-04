@@ -38,6 +38,16 @@
       @include glow-blue(0.25);
     }
   }
+  &.success {
+    background: $success;
+    color: white;
+    @include glow-blue(0.15);
+
+    &:hover:not(:disabled) {
+      background: $success-hover;
+      @include glow-blue(0.25);
+    }
+  }
 
   &.secondary {
     @include card-base;
