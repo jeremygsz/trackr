@@ -14,7 +14,6 @@
   cursor: pointer;
   transition: $transition-base;
   border: 1px solid transparent;
-  height: 48px;
   outline: none;
   color: $text-primary;
   white-space: nowrap;
@@ -26,6 +25,24 @@
 
   &.fullWidth {
     width: 100%;
+  }
+
+  &.sm {
+    height: 36px;
+    padding: $space-1 $space-4;
+    font-size: $font-size-xs;
+  }
+
+  &.md {
+    height: 48px;
+    padding: $space-3 $space-6;
+    font-size: $font-size-sm;
+  }
+
+  &.lg {
+    height: 56px;
+    padding: $space-4 $space-8;
+    font-size: $font-size-base;
   }
 
   &.primary {

@@ -9,6 +9,7 @@ type ButtonBaseProps = Omit<HTMLMotionProps<'button'>, 'ref'>;
 interface ButtonProps extends ButtonBaseProps {
   children?: React.ReactNode;
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'success';
+  size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
   fullWidth?: boolean;
 }
@@ -16,6 +17,7 @@ interface ButtonProps extends ButtonBaseProps {
 export const Button: React.FC<ButtonProps> = ({
   children,
   variant = 'primary',
+  size = 'md',
   isLoading,
   fullWidth,
   className = '',
@@ -28,6 +30,7 @@ export const Button: React.FC<ButtonProps> = ({
       className={`
         ${styles.button} 
         ${styles[variant]} 
+        ${styles[size]} 
         ${fullWidth ? styles.fullWidth : ''} 
         ${className}
       `}
