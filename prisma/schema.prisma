@@ -34,6 +34,7 @@ model User {
   createdAt           DateTime       @default(now())
   updatedAt           DateTime       @updatedAt
   onboardingCompleted Boolean        @default(false)
+  monthlyBudget       Decimal?       @db.Decimal(10, 2)
   banks               Bank[]
   categories          Category[]
   incomes             Income[]
@@ -46,6 +47,8 @@ model User {
   subscriptions       Subscription[]
   tags                Tag[]
   userBanks           UserBank[]
+  userCategories      UserCategory[]
+  userStores          UserStore[]
 }
 
 model Bank {
@@ -104,17 +107,33 @@ model Income {
 }
 
 model Category {
-  id            String        @id @default(uuid())
-  label         String        @unique
+  id            String         @id @default(uuid())
+  label         String         @unique
   icon          String?
   color         String?
   createdBy     String?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  user          User?         @relation(fields: [createdBy], references: [id])
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  user          User?          @relation(fields: [createdBy], references: [id])
   subcategories Subcategory[]
+  userCategories UserCategory[]
 
   @@index([createdBy])
+}
+
+model UserCategory {
+  id         String   @id @default(uuid())
+  userId     String
+  categoryId String
+  selected   Boolean  @default(false)
+  listOrder  Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, categoryId])
+  @@index([userId])
 }
 
 model Subcategory {
@@ -150,7 +169,23 @@ model Store {
   spendings     Spending[]
   user          User?          @relation(fields: [userId], references: [id])
   subscriptions Subscription[]
+  userStores    UserStore[]
 
+  @@index([userId])
+}
+
+model UserStore {
+  id        String   @id @default(uuid())
+  userId    String
+  storeId   String
+  selected  Boolean  @default(false)
+  listOrder Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, storeId])
   @@index([userId])
 }
 

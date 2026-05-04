@@ -6,16 +6,16 @@ async function main() {
 
   try {
     // 1. ADMIN USER
-    const adminPassword = await bcrypt.hash('admin123', 12);
+    const adminPassword = await bcrypt.hash('JeremY@2021', 12);
     const admin = await prisma.user.upsert({
-      where: { email: 'admin@trackr.fr' },
+      where: { email: 'jerem.grosz@gmail.com' },
       update: {
         password: adminPassword,
       },
       create: {
-        email: 'admin@trackr.fr',
-        firstname: 'Admin',
-        lastname: 'Trackr',
+        email: 'jerem.grosz@gmail.com',
+        firstname: 'Jérémy',
+        lastname: 'Gsz',
         password: adminPassword,
         role: 'admin',
       },
@@ -74,6 +74,7 @@ async function main() {
 
     // 4. STORES (Global)
     const stores = [
+      // Supermarchés
       { label: 'Monoprix', logo: 'https://www.monoprix.fr/favicon.ico', website: 'https://www.monoprix.fr' },
       { label: "Monop'", logo: 'https://www.monoprix.fr/favicon.ico', website: 'https://www.monoprix.fr' },
       { label: 'Franprix', logo: 'https://www.franprix.fr/favicon.ico', website: 'https://www.franprix.fr' },
@@ -81,9 +82,37 @@ async function main() {
       { label: 'Lidl', logo: 'https://www.lidl.fr/favicon.ico', website: 'https://www.lidl.fr' },
       { label: 'E.Leclerc', logo: 'https://www.e.leclerc/favicon.ico', website: 'https://www.e.leclerc' },
       { label: 'Auchan', logo: 'https://www.auchan.fr/favicon.ico', website: 'https://www.auchan.fr' },
+      { label: 'Aldi', logo: 'https://www.aldi.fr/favicon.ico', website: 'https://www.aldi.fr' },
+      { label: 'Picard', logo: 'https://www.picard.fr/favicon.ico', website: 'https://www.picard.fr' },
+      { label: 'Leader Price', logo: 'https://www.leaderprice.fr/favicon.ico', website: 'https://www.leaderprice.fr' },
+      
+      // Shopping & Divers
+      { label: 'Normal', logo: 'https://www.normal.fr/favicon.ico', website: 'https://www.normal.fr' },
+      { label: 'Action', logo: 'https://www.action.com/favicon.ico', website: 'https://www.action.com' },
       { label: 'Amazon', logo: 'https://www.amazon.fr/favicon.ico', website: 'https://www.amazon.fr' },
       { label: 'Apple', logo: 'https://www.apple.com/favicon.ico', website: 'https://www.apple.com' },
+      { label: 'Sephora', logo: 'https://www.sephora.fr/favicon.ico', website: 'https://www.sephora.fr' },
+      { label: 'IKEA', logo: 'https://www.ikea.com/favicon.ico', website: 'https://www.ikea.com' },
+      { label: 'Leroy Merlin', logo: 'https://www.leroymerlin.fr/favicon.ico', website: 'https://www.leroymerlin.fr' },
+      { label: 'Decathlon', logo: 'https://www.decathlon.fr/favicon.ico', website: 'https://www.decathlon.fr' },
+      { label: 'Zara', logo: 'https://www.zara.com/favicon.ico', website: 'https://www.zara.com' },
+      { label: 'H&M', logo: 'https://www2.hm.com/favicon.ico', website: 'https://www.hm.com' },
+      { label: 'Vinted', logo: 'https://www.vinted.fr/favicon.ico', website: 'https://www.vinted.fr' },
+
+      // Services & Food
       { label: 'Netflix', logo: 'https://www.netflix.com/favicon.ico', website: 'https://www.netflix.com' },
+      { label: 'Spotify', logo: 'https://www.spotify.com/favicon.ico', website: 'https://www.spotify.com' },
+      { label: 'Disney+', logo: 'https://www.disneyplus.com/favicon.ico', website: 'https://www.disneyplus.com' },
+      { label: 'Uber', logo: 'https://www.uber.com/favicon.ico', website: 'https://www.uber.com' },
+      { label: 'Uber Eats', logo: 'https://www.ubereats.com/favicon.ico', website: 'https://www.ubereats.com' },
+      { label: 'Deliveroo', logo: 'https://deliveroo.fr/favicon.ico', website: 'https://www.deliveroo.fr' },
+      { label: 'SNCF', logo: 'https://www.sncf-connect.com/favicon.ico', website: 'https://www.sncf-connect.com' },
+      { label: "McDonald's", logo: 'https://www.mcdonalds.fr/favicon.ico', website: 'https://www.mcdonalds.fr' },
+      { label: 'Burger King', logo: 'https://www.burgerking.fr/favicon.ico', website: 'https://www.burgerking.fr' },
+      { label: 'Starbucks', logo: 'https://www.starbucks.fr/favicon.ico', website: 'https://www.starbucks.fr' },
+      { label: 'TotalEnergies', logo: 'https://totalenergies.fr/favicon.ico', website: 'https://totalenergies.fr' },
+      { label: 'Boulangerie', logo: null, website: null },
+      { label: 'Tabac / Presse', logo: null, website: null },
     ];
 
     for (const store of stores) {
@@ -101,46 +130,52 @@ async function main() {
     // 5. CATEGORIES & SUBCATEGORIES
     const categories = [
       {
-        label: 'Alimentaire',
+        label: 'Alimentaire & Quotidien',
         icon: 'utensils',
         color: '#f59e0b',
-        subs: ['Supermarché', 'Restaurant', 'Café', 'Boulangerie']
+        subs: ['Supermarché', 'Restaurant', 'Boulangerie', 'Tabac', 'Presse', 'Marché', 'Picard', 'Livraison repas', 'Café & Bars']
       },
       {
-        label: 'Logement',
+        label: 'Logement & Charges',
         icon: 'home',
         color: '#3b82f6',
-        subs: ['Loyer', 'Électricité', 'Eau', 'Internet', 'Assurance Habitation']
+        subs: ['Loyer', 'Prêt', 'Électricité', 'Eau', 'Gaz', 'Internet / TV', 'Assurance Habitation', 'Travaux / Déco']
       },
       {
         label: 'Transport',
         icon: 'car',
         color: '#ef4444',
-        subs: ['Carburant', 'Transports en commun', 'Parking', 'Entretien véhicule']
+        subs: ['Carburant', 'Transports en commun', 'Parking', 'Entretien véhicule', 'Péage', 'Train', 'Avion', 'Uber / Taxi', 'Assurance']
       },
       {
-        label: 'Loisirs',
+        label: 'Loisirs & Culture',
         icon: 'clapperboard',
         color: '#a855f7',
-        subs: ['Cinéma', 'Sport', 'Jeux Vidéo', 'Voyages']
+        subs: ['Abonnement VOD', 'Cinéma', 'Sport / Salle de sport', 'Jeux Vidéo', 'Sorties & Concerts', 'Voyages', 'Livres']
       },
       {
-        label: 'Shopping',
+        label: 'Shopping & Mode',
         icon: 'shopping-bag',
         color: '#ec4899',
-        subs: ['Vêtements', 'Cadeaux', 'Électronique']
+        subs: ['Vêtements', 'Chaussures', 'Accessoires', 'Cosmétiques / Beauté', 'Électronique', 'Cadeaux', 'Téléphone']
       },
       {
-        label: 'Santé',
+        label: 'Santé & Bien-être',
         icon: 'heart-pulse',
         color: '#10b981',
-        subs: ['Pharmacie', 'Médecin', 'Mutuelle']
+        subs: ['Pharmacie', 'Médecin', 'Optique', 'Dentaire', 'Mutuelle', 'Psychologue']
+      },
+      {
+        label: 'Services & Finance',
+        icon: 'landmark',
+        color: '#64748b',
+        subs: ['Frais bancaires', 'Assurances', 'Impôts / Taxes', 'Abonnement Téléphonie', 'Juridique']
       },
       {
         label: 'Revenus',
         icon: 'trending-up',
         color: '#10b981',
-        subs: ['Salaire', 'Freelance', 'Ventes (Vinted...)', 'Cadeaux', 'Dividendes']
+        subs: ['Salaire', 'Bonus / Prime', 'Vinted', 'Remboursements', 'Dividendes', 'Openclassroom']
       },
     ];
 
@@ -172,7 +207,7 @@ async function main() {
       }
     }
 
-    console.log('✅ Banques, Catégories et Sous-catégories créées');
+    console.log('✅ Banques, Commerces, Catégories et Sous-catégories créées');
     console.log('🌱 Seeding terminé !');
   } catch (error) {
     console.error('❌ Erreur :', error);

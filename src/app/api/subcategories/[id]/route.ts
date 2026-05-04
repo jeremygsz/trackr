@@ -14,8 +14,13 @@ export async function PATCH(
     const { id } = await params;
 
     const existing = await prisma.subcategory.findUnique({ where: { id } });
-    if (!existing || (existing.createdBy && existing.createdBy !== session.user.id)) {
-      return NextResponse.json({ error: 'Non trouvé ou non autorisé' }, { status: 404 });
+    if (!existing) return NextResponse.json({ error: 'Non trouvé' }, { status: 404 });
+
+    const isOwner = existing.createdBy === session.user.id;
+    const isAdmin = session.user.role === 'admin';
+
+    if ((existing.createdBy === null && !isAdmin) || (existing.createdBy !== null && !isOwner)) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
     }
 
     const updated = await prisma.subcategory.update({
@@ -40,8 +45,13 @@ export async function DELETE(
     const { id } = await params;
 
     const existing = await prisma.subcategory.findUnique({ where: { id } });
-    if (!existing || (existing.createdBy && existing.createdBy !== session.user.id)) {
-      return NextResponse.json({ error: 'Non trouvé ou non autorisé' }, { status: 404 });
+    if (!existing) return NextResponse.json({ error: 'Non trouvé' }, { status: 404 });
+
+    const isOwner = existing.createdBy === session.user.id;
+    const isAdmin = session.user.role === 'admin';
+
+    if ((existing.createdBy === null && !isAdmin) || (existing.createdBy !== null && !isOwner)) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
     }
 
     // Check usage

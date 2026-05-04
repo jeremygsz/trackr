@@ -14,8 +14,13 @@ export async function PATCH(
     const { id } = await params;
 
     const existing = await prisma.store.findUnique({ where: { id } });
-    if (!existing || (existing.userId && existing.userId !== session.user.id)) {
-      return NextResponse.json({ error: 'Non trouvé ou non autorisé' }, { status: 404 });
+    if (!existing) return NextResponse.json({ error: 'Non trouvé' }, { status: 404 });
+
+    const isOwner = existing.userId === session.user.id;
+    const isAdmin = session.user.role === 'admin';
+
+    if ((existing.userId === null && !isAdmin) || (existing.userId !== null && !isOwner)) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
     }
 
     const updated = await prisma.store.update({
@@ -40,8 +45,13 @@ export async function DELETE(
     const { id } = await params;
 
     const existing = await prisma.store.findUnique({ where: { id } });
-    if (!existing || (existing.userId && existing.userId !== session.user.id)) {
-      return NextResponse.json({ error: 'Non trouvé ou non autorisé' }, { status: 404 });
+    if (!existing) return NextResponse.json({ error: 'Non trouvé' }, { status: 404 });
+
+    const isOwner = existing.userId === session.user.id;
+    const isAdmin = session.user.role === 'admin';
+
+    if ((existing.userId === null && !isAdmin) || (existing.userId !== null && !isOwner)) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
     }
 
     // Check usage

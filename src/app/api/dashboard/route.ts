@@ -106,6 +106,23 @@ export async function GET() {
       });
     }
 
+    // 7. Budget Calculation
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { monthlyBudget: true }
+    });
+
+    const currentIncomes = await prisma.income.aggregate({
+      where: {
+        userId,
+        date: { gte: currentMonthStart, lte: currentMonthEnd }
+      },
+      _sum: { amount: true }
+    });
+
+    const incomeTotal = Number(currentIncomes._sum.amount || 0);
+    const baseBudget = user?.monthlyBudget ? Number(user.monthlyBudget) : incomeTotal;
+
     const currentTotal = Number(currentSpendings._sum.amountNet || 0);
     const lastTotal = Number(lastSpendings._sum.amountNet || 0);
     const spendingTrend = lastTotal > 0 ? ((currentTotal - lastTotal) / lastTotal) * 100 : 0;
@@ -117,7 +134,8 @@ export async function GET() {
         totalSpending: currentTotal,
         spendingTrend: Math.round(spendingTrend),
         activeSubscriptions: Number(activeSubscriptions._sum.amount || 0),
-        budgetRemaining: 1500 - currentTotal, // Mock budget
+        budgetRemaining: baseBudget - currentTotal,
+        baseBudget
       },
       chartData,
       transactions
