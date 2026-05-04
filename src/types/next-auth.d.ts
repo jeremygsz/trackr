@@ -13,6 +13,7 @@ declare module 'next-auth' {
     }
 
     interface User extends DefaultUser {
+        id: string
         firstname: string
         lastname: string
         role: string
@@ -32,6 +33,7 @@ declare module 'next-auth/jwt' {
 
 declare module "@auth/core/adapters" {
     interface AdapterUser extends DefaultUser {
+        id: string
         firstname: string
         lastname: string
         role: string
