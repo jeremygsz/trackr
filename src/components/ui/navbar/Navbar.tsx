@@ -29,6 +29,7 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ onNewTransaction }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const { data: session } = useSession();
@@ -42,6 +43,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onNewTransaction }) => {
     { label: 'Magasins', href: '/stores', icon: Store },
   ];
 
+  // Set mounted on client
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Close user menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -52,6 +58,18 @@ export const Navbar: React.FC<NavbarProps> = ({ onNewTransaction }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Prevent scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
 
   const getUserInitials = () => {
     if (!user?.firstname || !user?.lastname) return 'U';
@@ -96,7 +114,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNewTransaction }) => {
               <span>Nouvelle transaction</span>
             </Button>
 
-            {user && (
+            {mounted && user && (
               <div className={styles.userMenuContainer} ref={userMenuRef}>
                 <button 
                   className={styles.userTrigger}
@@ -170,7 +188,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNewTransaction }) => {
             className={styles.mobileMenu}
           >
             <div className={styles.mobileLinks}>
-              {user && (
+              {mounted && user && (
                 <div className={styles.mobileUserHeader}>
                   <div className={styles.avatar}>
                     {getUserInitials()}
