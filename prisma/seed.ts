@@ -77,7 +77,7 @@ async function main() {
       // Supermarchés
       { label: 'Monoprix', logo: 'https://www.monoprix.fr/favicon.ico', website: 'https://www.monoprix.fr' },
       { label: "Monop'", logo: 'https://www.monoprix.fr/favicon.ico', website: 'https://www.monoprix.fr' },
-      { label: 'Franprix', logo: 'https://www.franprix.fr/favicon.ico', website: 'https://www.franprix.fr' },
+      { label: 'Franprix', logo: '/stores/franprix.svg', website: 'https://www.franprix.fr' },
       { label: 'Carrefour', logo: 'https://www.carrefour.fr/favicon.ico', website: 'https://www.carrefour.fr' },
       { label: 'Lidl', logo: 'https://www.lidl.fr/favicon.ico', website: 'https://www.lidl.fr' },
       { label: 'E.Leclerc', logo: 'https://www.e.leclerc/favicon.ico', website: 'https://www.e.leclerc' },
@@ -87,9 +87,10 @@ async function main() {
       { label: 'Leader Price', logo: 'https://www.leaderprice.fr/favicon.ico', website: 'https://www.leaderprice.fr' },
       
       // Shopping & Divers
-      { label: 'Normal', logo: 'https://www.normal.fr/favicon.ico', website: 'https://www.normal.fr' },
-      { label: 'Action', logo: 'https://www.action.com/favicon.ico', website: 'https://www.action.com' },
-      { label: 'Amazon', logo: 'https://www.amazon.fr/favicon.ico', website: 'https://www.amazon.fr' },
+      { label: 'Normal', logo: '', website: 'https://www.normal.fr' },
+      { label: 'Action', logo: '', website: 'https://www.action.com' },
+      { label: 'Asos', logo: '/stores/asos.svg', website: '' },
+      { label: 'Amazon', logo: '', website: 'https://www.amazon.fr' },
       { label: 'Apple', logo: 'https://www.apple.com/favicon.ico', website: 'https://www.apple.com' },
       { label: 'Sephora', logo: 'https://www.sephora.fr/favicon.ico', website: 'https://www.sephora.fr' },
       { label: 'IKEA', logo: 'https://www.ikea.com/favicon.ico', website: 'https://www.ikea.com' },
@@ -98,9 +99,12 @@ async function main() {
       { label: 'Zara', logo: 'https://www.zara.com/favicon.ico', website: 'https://www.zara.com' },
       { label: 'H&M', logo: 'https://www2.hm.com/favicon.ico', website: 'https://www.hm.com' },
       { label: 'Vinted', logo: 'https://www.vinted.fr/favicon.ico', website: 'https://www.vinted.fr' },
+      { label: 'Uniqlo', logo: '/stores/uniqlo.svg', website: 'https://www.vinted.fr' },
+      { label: 'Zalando', logo: '/stores/zalando.svg', website: 'https://www.zalando.fr' },
+      { label: 'Flying Tiger', logo: '/stores/flying.svg', website: '' },
 
       // Services & Food
-      { label: 'Netflix', logo: 'https://www.netflix.com/favicon.ico', website: 'https://www.netflix.com' },
+      { label: 'Netflix', logo: '/stores/netflix.svg', website: 'https://www.netflix.com' },
       { label: 'Spotify', logo: 'https://www.spotify.com/favicon.ico', website: 'https://www.spotify.com' },
       { label: 'Disney+', logo: 'https://www.disneyplus.com/favicon.ico', website: 'https://www.disneyplus.com' },
       { label: 'Uber', logo: 'https://www.uber.com/favicon.ico', website: 'https://www.uber.com' },

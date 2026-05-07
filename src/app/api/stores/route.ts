@@ -74,7 +74,7 @@ export async function POST(req: Request) {
     if (!label) return NextResponse.json({ error: 'Libellé requis' }, { status: 400 });
 
     const store = await prisma.$transaction(async (tx) => {
-      // 1. Create the store
+      // 1. Create the stores
       const newStore = await tx.store.create({
         data: {
           label,
@@ -107,7 +107,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(store);
   } catch (error) {
-    console.error('Error creating store:', error);
+    console.error('Error creating stores:', error);
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
   }
 }
