@@ -80,7 +80,7 @@
 
 .currentValue {
   flex: 1;
-  font-size: $font-size-sm;
+  font-size: $font-size-base;
   color: $text-primary;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -135,7 +135,7 @@
   border: none;
   outline: none;
   color: $text-primary;
-  font-size: $font-size-sm;
+  font-size: $font-size-base;
   padding: $space-1 0;
 
   &::placeholder {
@@ -165,7 +165,7 @@
 
 .option {
   padding: $space-2 $space-3;
-  font-size: $font-size-sm;
+  font-size: $font-size-base;
   color: $text-secondary;
   border-radius: $radius-sm;
   cursor: pointer;

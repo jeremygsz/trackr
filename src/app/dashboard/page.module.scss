@@ -83,9 +83,15 @@
   gap: $space-4;
 }
 
+.viewAllWrapper {
+  text-decoration: none;
+  display: block;
+}
+
 .viewAll {
   margin-top: $space-2;
-  align-self: flex-end;
+  width: 100%;
+  justify-content: center;
   color: $blue-primary;
   gap: $space-2;
   

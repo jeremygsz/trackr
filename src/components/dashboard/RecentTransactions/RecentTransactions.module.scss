@@ -28,10 +28,25 @@
   padding: $space-3;
   border-radius: $radius-md;
   transition: $transition-base;
+  cursor: pointer;
 
   &:hover {
     background: $bg-elevated;
+
+    .editHint {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
+}
+
+.editHint {
+  color: $text-muted;
+  opacity: 0;
+  transform: translateX(-5px);
+  transition: $transition-base;
+  display: flex;
+  align-items: center;
 }
 
 .iconWrapper {
@@ -68,4 +83,45 @@
   font-size: $font-size-base;
   font-weight: $font-weight-bold;
   color: $text-primary;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-4;
+  margin-top: $space-6;
+  padding-top: $space-4;
+  border-top: 1px solid $border-subtle;
+}
+
+.pageBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: $radius-sm;
+  border: 1px solid $border-subtle;
+  background: $bg-elevated;
+  color: $text-primary;
+  cursor: pointer;
+  transition: $transition-base;
+
+  &:hover:not(:disabled) {
+    background: $bg-overlay;
+    border-color: $blue-primary;
+    color: $blue-primary;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.pageInfo {
+  font-size: $font-size-xs;
+  color: $text-muted;
+  font-weight: $font-weight-medium;
 }

@@ -70,21 +70,52 @@ export async function GET() {
     });
 
     // 5. Recent Transactions
-    const recentSpendings = await prisma.spending.findMany({
-      where: { userId },
-      take: 5,
-      orderBy: { spendingDate: 'desc' },
-      include: { subcategory: true, lines: true }
-    });
+    const [recentSpendings, recentInstallments] = await Promise.all([
+      prisma.spending.findMany({
+        where: { userId },
+        take: 10,
+        orderBy: { spendingDate: 'desc' },
+        include: { subcategory: true, lines: true }
+      }),
+      prisma.installment.findMany({
+        where: { userId },
+        take: 5,
+        orderBy: { startAt: 'desc' },
+        include: { subcategory: true, lines: true }
+      })
+    ]);
 
-    const transactions = recentSpendings.map(s => ({
+    const spendingTransactions = recentSpendings.map(s => ({
       id: s.id,
       label: s.label,
       amount: s.lines.reduce((acc, curr) => acc + Number(curr.amountNet), 0),
       date: s.spendingDate,
       category: s.subcategory.label,
+      subcategoryId: s.subcategoryId,
+      storeId: s.storeId,
+      notes: s.notes,
+      lines: s.lines,
       type: 'spending'
     }));
+
+    const installmentTransactions = recentInstallments.map(i => ({
+      id: i.id,
+      label: i.label,
+      amount: Number(i.totalAmount),
+      date: i.startAt,
+      category: i.subcategory.label,
+      subcategoryId: i.subcategoryId,
+      storeId: i.storeId,
+      notes: i.notes,
+      occurrences: i.occurrences,
+      bankId: i.bankId,
+      lines: i.lines,
+      type: 'installment'
+    }));
+
+    const transactions = [...spendingTransactions, ...installmentTransactions]
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 15);
 
     // 6. Chart Data (Last 7 days)
     const chartData = [];

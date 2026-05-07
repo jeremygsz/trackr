@@ -10,6 +10,7 @@ import { RecentTransactions } from '@/components/dashboard/RecentTransactions/Re
 import { Wallet, TrendingDown, Calendar, ArrowRight, Clock, CalendarDays } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
 import { Navbar } from '@/components/ui/navbar/Navbar';
+import Link from 'next/link';
 
 export default function DashboardPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -91,10 +92,15 @@ export default function DashboardPage() {
             />
           </div>
           <div className={styles.rightCol}>
-            <RecentTransactions transactions={data?.transactions || []} />
-            <Button variant="ghost" className={styles.viewAll}>
-              Voir tout <ArrowRight size={16} />
-            </Button>
+            <RecentTransactions 
+              transactions={data?.transactions || []} 
+              onRefresh={fetchDashboardData}
+            />
+            <Link href="/transactions" className={styles.viewAllWrapper}>
+              <Button variant="ghost" className={styles.viewAll}>
+                Voir tout <ArrowRight size={16} />
+              </Button>
+            </Link>
           </div>
         </div>
       </main>

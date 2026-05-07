@@ -57,7 +57,7 @@
   outline: none;
   padding: 0 $space-4;
   color: $text-primary;
-  font-size: $font-size-sm;
+  font-size: $font-size-base; // Changed to base (16px) to prevent iOS zoom
 
   &::placeholder {
     color: $text-muted;

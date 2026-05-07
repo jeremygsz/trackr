@@ -8,24 +8,42 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { label, amount, subcategoryId, bankId, date, notes } = body;
+    const { label, amount, subcategoryId, bankId, date, notes, lines } = body;
+
+    const spendingData: any = {
+      userId: session.user.id,
+      label,
+      subcategoryId,
+      spendingDate: new Date(date || new Date()),
+      notes,
+    };
+
+    if (lines && lines.length > 0) {
+      spendingData.lines = {
+        create: lines.map((l: any) => ({
+          amountGross: l.amountGross,
+          discount: l.discount || 0,
+          amountNet: l.amountNet,
+          bankId: l.bankId,
+          label: l.label || label,
+        })),
+      };
+    } else {
+      const gross = parseFloat(amount);
+      spendingData.lines = {
+        create: {
+          amountGross: gross,
+          discount: 0,
+          amountNet: gross,
+          bankId: bankId,
+          label: label,
+        },
+      };
+    }
 
     const spending = await prisma.spending.create({
-      data: {
-        userId: session.user.id,
-        label,
-        subcategoryId,
-        spendingDate: new Date(date || new Date()),
-        notes,
-        lines: {
-          create: {
-            amountNet: parseFloat(amount),
-            amountGross: parseFloat(amount),
-            bankId: bankId,
-            label: label,
-          },
-        },
-      },
+      data: spendingData,
+      include: { lines: true }
     });
 
     return NextResponse.json(spending, { status: 201 });
