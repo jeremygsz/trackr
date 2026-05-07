@@ -8,10 +8,11 @@ type ButtonBaseProps = Omit<HTMLMotionProps<'button'>, 'ref'>;
 
 interface ButtonProps extends ButtonBaseProps {
   children?: React.ReactNode;
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'success';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'success' | 'outline';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
   fullWidth?: boolean;
+  icon?: React.ReactNode;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -20,6 +21,7 @@ export const Button: React.FC<ButtonProps> = ({
   size = 'md',
   isLoading,
   fullWidth,
+  icon,
   className = '',
   ...props
 }) => {
@@ -41,7 +43,10 @@ export const Button: React.FC<ButtonProps> = ({
         {isLoading ? (
           <span className={styles.loader} aria-label="Chargement..." />
         ) : (
-          children
+          <>
+            {icon && <span className={styles.icon}>{icon}</span>}
+            {children}
+          </>
         )}
       </span>
     </motion.button>

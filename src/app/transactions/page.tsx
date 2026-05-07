@@ -4,15 +4,15 @@ import React, { useState, useEffect } from 'react';
 import styles from './page.module.scss';
 import { Navbar } from '@/components/ui/navbar/Navbar';
 import { RecentTransactions } from '@/components/dashboard/RecentTransactions/RecentTransactions';
-import { Search, Filter, ArrowLeft, Download, Calendar } from 'lucide-react';
-import { Input } from '@/components/ui/input/Input';
+import { Search, Filter, ArrowLeft, Download, Calendar, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
 import Link from 'next/link';
 import { Modal } from '@/components/ui/modal/Modal';
 import { TransactionForm } from '@/components/forms/TransactionForm';
+import { Transaction } from '@/types/transactions';
 
 export default function TransactionsPage() {
-  const [transactions, setTransactions] = useState<any[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -95,6 +95,3 @@ export default function TransactionsPage() {
   );
 }
 
-const Plus = ({ size }: { size: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-);

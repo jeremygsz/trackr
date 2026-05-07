@@ -55,6 +55,17 @@
       @include glow-blue(0.25);
     }
   }
+
+  &.danger {
+    background: rgba($error, 0.1);
+    color: $error;
+    border: 1px solid rgba($error, 0.2);
+    
+    &:hover:not(:disabled) {
+      background: rgba($error, 0.2);
+    }
+  }
+
   &.success {
     background: $success;
     color: white;
@@ -72,6 +83,17 @@
     
     &:hover:not(:disabled) {
       background: $bg-overlay;
+    }
+  }
+
+  &.outline {
+    background: transparent;
+    border: 1px solid rgba($text-primary, 0.1);
+    color: $text-primary;
+    
+    &:hover:not(:disabled) {
+      background: $bg-elevated;
+      border-color: rgba($text-primary, 0.2);
     }
   }
 
@@ -94,6 +116,12 @@
   display: flex;
   align-items: center;
   gap: $space-2;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .loader {

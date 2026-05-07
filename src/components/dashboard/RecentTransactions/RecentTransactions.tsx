@@ -3,20 +3,7 @@ import styles from './RecentTransactions.module.scss';
 import { ShoppingBag, CreditCard, RefreshCw, Edit2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Modal } from '@/components/ui/modal/Modal';
 import { TransactionForm } from '@/components/forms/TransactionForm';
-
-interface Transaction {
-  id: string;
-  label: string;
-  amount: number;
-  date: string;
-  category: string;
-  subcategoryId: string;
-  storeId?: string;
-  bankId?: string;
-  notes?: string;
-  type: 'spending' | 'subscription' | 'installment';
-  lines?: any[];
-}
+import { Transaction } from '@/types/transactions';
 
 interface RecentTransactionsProps {
   transactions: Transaction[];
