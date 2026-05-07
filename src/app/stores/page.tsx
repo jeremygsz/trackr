@@ -136,7 +136,7 @@ export default function StoresPage() {
               <div key={store.id} className={styles.storeCard}>
                 <div className={styles.storeInfo}>
                   <div className={styles.storeIcon}>
-                    {store.logo && (store.logo.startsWith('http') || store.logo.includes('/') || store.logo.includes('.')) ? (
+                    {store.logo && (store.logo.includes('/') || store.logo.includes('.')) ? (
                       <Image 
                         src={store.logo} 
                         alt={store.label} 

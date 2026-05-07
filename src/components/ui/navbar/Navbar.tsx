@@ -225,17 +225,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onNewTransaction }) => {
 
               <div className={styles.mobileActions}>
                 <Button 
-                  onClick={() => {
-                    onNewTransaction();
-                    setIsMobileMenuOpen(false);
-                  }} 
-                  fullWidth
-                >
-                  <Plus size={18} />
-                  Nouvelle transaction
-                </Button>
-                
-                <Button 
                   variant="ghost"
                   onClick={handleSignOut}
                   fullWidth

@@ -101,13 +101,16 @@
   gap: $space-6;
 
   // Keep actions visible until mobile size, but allow some wrapping/hiding logic
-  @media (max-width: $bp-sm) {
-    display: none;
-  }
+  //@media (max-width: $bp-sm) {
+  //  display: none;
+  //}
 }
 
 .userMenuContainer {
   position: relative;
+  @media (max-width: $bp-sm) {
+    display: none;
+  }
 }
 
 .userTrigger {
