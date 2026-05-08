@@ -9,7 +9,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
   try {
     const body = await req.json();
-    const { label, amount, subcategoryId, bankId, occurrences, startAt, notes } = body;
+    const { label, amount, subcategoryId, storeId, bankId, occurrences, startAt, notes } = body;
     const { id } = await params;
     
     const numOccurrences = parseInt(occurrences);
@@ -26,6 +26,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         amountPerOccurrence,
         occurrences: numOccurrences,
         subcategoryId,
+        storeId: storeId || null,
         bankId,
         startAt: startDate,
         endAt: addMonths(startDate, numOccurrences - 1),

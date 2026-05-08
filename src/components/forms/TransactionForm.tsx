@@ -27,6 +27,18 @@ export const TransactionForm: React.FC<{
   const [metaData, setMetaData] = useState<MetaData | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // Helper to format date for input (YYYY-MM-DD)
+  const formatDateForInput = (dateInput: any) => {
+    if (!dateInput) return new Date().toISOString().split('T')[0];
+    try {
+      const date = new Date(dateInput);
+      if (isNaN(date.getTime())) return new Date().toISOString().split('T')[0];
+      return date.toISOString().split('T')[0];
+    } catch (e) {
+      return new Date().toISOString().split('T')[0];
+    }
+  };
+
   // Multi-line state for spendings
   const [lines, setLines] = useState<any[]>(initialData?.lines?.map((l: any) => ({
     amountGross: l.amountGross || l.amountNet || l.amount || '',
@@ -308,7 +320,7 @@ export const TransactionForm: React.FC<{
                   name="date" 
                   label="Date" 
                   type="date" 
-                  defaultValue={initialData?.date || new Date().toISOString().split('T')[0]}
+                  defaultValue={formatDateForInput(initialData?.date)}
                   icon={<Calendar size={16} />}
                 />
               </div>
@@ -441,7 +453,7 @@ export const TransactionForm: React.FC<{
                 name={type === 'income' ? 'date' : 'startAt'} 
                 label={type === 'subscription' ? 'Prochain prél.' : type === 'installment' ? 'Date début' : 'Date'} 
                 type="date" 
-                defaultValue={initialData?.date || initialData?.startAt || new Date().toISOString().split('T')[0]}
+                defaultValue={formatDateForInput(initialData?.date || initialData?.startAt)}
                 icon={<Calendar size={16} />}
               />
 

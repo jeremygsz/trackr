@@ -8,7 +8,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
   try {
     const body = await req.json();
-    const { label, amount, subcategoryId, bankId, startAt, recurrency, notes } = body;
+    const { label, amount, subcategoryId, storeId, bankId, startAt, recurrency, notes } = body;
     const { id } = await params;
 
     const subscription = await prisma.subscription.update({
@@ -17,6 +17,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         label,
         amount: parseFloat(amount),
         subcategoryId,
+        storeId: storeId || null,
         bankId,
         startAt: new Date(startAt),
         recurrency,

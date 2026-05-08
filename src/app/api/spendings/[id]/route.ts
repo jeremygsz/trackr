@@ -8,7 +8,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
   try {
     const body = await req.json();
-    const { label, subcategoryId, date, notes, lines } = body;
+    const { label, subcategoryId, storeId, date, notes, lines } = body;
     const { id } = await params;
 
     // Verify ownership
@@ -20,6 +20,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     const updateData: any = {
       label,
       subcategoryId,
+      storeId: storeId || null,
       spendingDate: new Date(date),
       notes,
     };
