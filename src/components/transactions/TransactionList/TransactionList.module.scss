@@ -1,6 +1,6 @@
 @use "@/styles/variables" as *;
 
-.recentTransactions {
+.transactionList {
   background: $bg-surface;
   border: 1px solid $border-subtle;
   border-radius: $radius-lg;
@@ -83,6 +83,13 @@
   font-size: $font-size-base;
   font-weight: $font-weight-bold;
   color: $text-primary;
+}
+
+.empty {
+  text-align: center;
+  padding: $space-8;
+  color: $text-muted;
+  font-style: italic;
 }
 
 .pagination {

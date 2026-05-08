@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './page.module.scss';
 import { Navbar } from '@/components/ui/navbar/Navbar';
-import { RecentTransactions } from '@/components/dashboard/RecentTransactions/RecentTransactions';
+import { TransactionList } from '@/components/transactions/TransactionList/TransactionList';
 import { Search, Filter, ArrowLeft, Download, Calendar, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
 import Link from 'next/link';
@@ -77,9 +77,10 @@ export default function TransactionsPage() {
           {loading ? (
             <div className={styles.loader}>Chargement...</div>
           ) : (
-            <RecentTransactions 
+            <TransactionList 
               transactions={filteredTransactions} 
               onRefresh={fetchTransactions}
+              itemsPerPage={15}
             />
           )}
         </section>
