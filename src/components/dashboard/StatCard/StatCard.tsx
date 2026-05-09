@@ -26,16 +26,16 @@ export const StatCard: React.FC<StatCardProps> = ({
         <div className={styles.iconWrapper}>
           <Icon size={24} />
         </div>
-        {trend && (
-          <div className={`${styles.trend} ${trend.isPositive ? styles.positive : styles.negative}`}>
-            {trend.isPositive ? '+' : '-'}{Math.abs(trend.value)}%
-          </div>
-        )}
       </div>
       <div className={styles.content}>
         <span className={styles.label}>{label}</span>
         <h3 className={styles.value}>{value}</h3>
       </div>
+      {trend && (
+          <div className={`${styles.trend} ${trend.isPositive ? styles.positive : styles.negative}`}>
+            {trend.isPositive ? '+' : '-'}{Math.abs(trend.value)}%
+          </div>
+      )}
     </div>
   );
 };
